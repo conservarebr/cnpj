@@ -121,20 +121,3 @@ CREATE TABLE cnae AS
 SELECT DISTINCT cnpj_completo, endereco, endereco_editado_1, endereco_editado_2
 FROM filtro_cnae;
 
--- Etapa 04: Fazendo as requisições 
-
-INSTALL httpfs;
-LOAD 'httpfs';
-
-CREATE TABLE url AS
-SELECT
-    cnpj_completo, endereco_editado_1,
-    'https://nominatim.openstreetmap.org/search?addressdetails=1&q=' || endereco_editado_1 || '&format=jsonv2&limit=1' AS url
-FROM
-    cnae;
-   
-SELECT * FROM url LIMIT 10
-  
-  
- 
-
