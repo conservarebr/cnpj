@@ -163,4 +163,4 @@ cython_debug/
 .pytest_cache/v/cache/lastfailed
 
 # Ignorar arquivos CSV de estabelecimentos
-~/src/cnpj/csv/estabelecimentos_*.csv
+.csv
