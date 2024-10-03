@@ -29,8 +29,6 @@
     #else:
         #print(f"Arquivo não encontrado: {file_path}")
 
-
-# testes.py
 import duckdb
 
 from app.core.config import settings
