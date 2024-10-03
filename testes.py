@@ -50,5 +50,5 @@ def execute_sql_file(file_path):
     conn.close()
 
 if __name__ == "__main__":
-    sql_file_path = os.path.join(settings.data_path, 'scripts', 'cnpj.sql')
+    sql_file_path = os.path.join(settings.data_path, 'scripts', 'CNPJ.sql')
     execute_sql_file(sql_file_path)
