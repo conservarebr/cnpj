@@ -1,15 +1,12 @@
 
 ----- Cnae -----
 
---CREATE TABLE cnae (
-    --codigo VARCHAR PRIMARY key,
-    --descricao VARCHAR
---);
+CREATE TABLE cnae (
+    codigo VARCHAR PRIMARY key,
+    descricao VARCHAR
+);
 
---COPY cnae FROM '/mnt/disk1/data/cnpj/cnaes.csv' WITH (FORMAT csv, DELIMITER ';', HEADER false, ENCODING 'UTF8');
-
-CREATE TABLE cnae AS
-SELECT * FROM read_csv_auto('/mnt/disk1/data/cnpj/cnaes.csv', delimiter=';', header=false);
+COPY cnae FROM '/mnt/disk1/data/cnpj/cnaes.csv' WITH (FORMAT csv, DELIMITER ';', HEADER false, ENCODING 'UTF8');
 
 select count (*) from cnae
 
