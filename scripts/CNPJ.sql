@@ -6,7 +6,7 @@ CREATE TABLE cnae (
     descricao VARCHAR
 );
 
-COPY cnae FROM 'mnt/disk1/data/cnpj/cnaes.csv' WITH (FORMAT csv, DELIMITER ';', HEADER false, ENCODING 'UTF8');
+COPY cnae FROM '${data_path}/cnaes.csv' WITH (FORMAT csv, DELIMITER ';', HEADER false, ENCODING 'UTF8');
 
 select count (*) from cnae
 
@@ -17,7 +17,7 @@ CREATE TABLE municipios (
     descricao VARCHAR
 );
 
-COPY municipios FROM 'mnt/disk1/data/cnpj/municipios.csv' WITH (FORMAT csv, DELIMITER ';', HEADER false, ENCODING 'UTF8');
+COPY municipios FROM '${data_path}/municipios.csv' WITH (FORMAT csv, DELIMITER ';', HEADER false, ENCODING 'UTF8');
 
 SELECT COUNT (*) from municipios
 
@@ -56,16 +56,16 @@ CREATE TABLE estabelecimentos (
     data_da_situacao_especial VARCHAR
 );
 
-COPY estabelecimentos FROM 'mnt/disk1/data/cnpj/estabelecimentos0.csv' WITH (FORMAT csv, DELIMITER ';', HEADER false, IGNORE_ERRORS true);
-COPY estabelecimentos FROM 'mnt/disk1/data/cnpj/estabelecimentos1.csv' WITH (FORMAT csv, DELIMITER ';', HEADER false, IGNORE_ERRORS true);
-COPY estabelecimentos FROM 'mnt/disk1/data/cnpj/estabelecimentos2.csv' WITH (FORMAT csv, DELIMITER ';', HEADER false, IGNORE_ERRORS true);
-COPY estabelecimentos FROM 'mnt/disk1/data/cnpj/estabelecimentos3.csv' WITH (FORMAT csv, DELIMITER ';', HEADER false, IGNORE_ERRORS true);
-COPY estabelecimentos FROM 'mnt/disk1/data/cnpj/estabelecimentos4.csv' WITH (FORMAT csv, DELIMITER ';', HEADER false, IGNORE_ERRORS true);
-COPY estabelecimentos FROM 'mnt/disk1/data/cnpj/estabelecimentos5.csv' WITH (FORMAT csv, DELIMITER ';', HEADER false, IGNORE_ERRORS true);
-COPY estabelecimentos FROM 'mnt/disk1/data/cnpj/estabelecimentos6.csv' WITH (FORMAT csv, DELIMITER ';', HEADER false, IGNORE_ERRORS true);
-COPY estabelecimentos FROM 'mnt/disk1/data/cnpj/estabelecimentos7.csv' WITH (FORMAT csv, DELIMITER ';', HEADER false, IGNORE_ERRORS true);
-COPY estabelecimentos FROM 'mnt/disk1/data/cnpj/estabelecimentos8.csv' WITH (FORMAT csv, DELIMITER ';', HEADER false, IGNORE_ERRORS true);
-COPY estabelecimentos FROM 'mnt/disk1/data/cnpj/estabelecimentos9.csv' WITH (FORMAT csv, DELIMITER ';', HEADER false, IGNORE_ERRORS true);
+COPY estabelecimentos FROM '${data_path}/estabelecimentos0.csv' WITH (FORMAT csv, DELIMITER ';', HEADER false, IGNORE_ERRORS true);
+COPY estabelecimentos FROM '${data_path}/estabelecimentos1.csv' WITH (FORMAT csv, DELIMITER ';', HEADER false, IGNORE_ERRORS true);
+COPY estabelecimentos FROM '${data_path}/estabelecimentos2.csv' WITH (FORMAT csv, DELIMITER ';', HEADER false, IGNORE_ERRORS true);
+COPY estabelecimentos FROM '${data_path}/estabelecimentos3.csv' WITH (FORMAT csv, DELIMITER ';', HEADER false, IGNORE_ERRORS true);
+COPY estabelecimentos FROM '${data_path}/estabelecimentos4.csv' WITH (FORMAT csv, DELIMITER ';', HEADER false, IGNORE_ERRORS true);
+COPY estabelecimentos FROM '${data_path}/estabelecimentos5.csv' WITH (FORMAT csv, DELIMITER ';', HEADER false, IGNORE_ERRORS true);
+COPY estabelecimentos FROM '${data_path}/estabelecimentos6.csv' WITH (FORMAT csv, DELIMITER ';', HEADER false, IGNORE_ERRORS true);
+COPY estabelecimentos FROM '${data_path}/estabelecimentos7.csv' WITH (FORMAT csv, DELIMITER ';', HEADER false, IGNORE_ERRORS true);
+COPY estabelecimentos FROM '${data_path}/estabelecimentos8.csv' WITH (FORMAT csv, DELIMITER ';', HEADER false, IGNORE_ERRORS true);
+COPY estabelecimentos FROM '${data_path}/estabelecimentos9.csv' WITH (FORMAT csv, DELIMITER ';', HEADER false, IGNORE_ERRORS true);
 
 -- Etapa 01: Filtrando somente os estabelecimentos ativos e concatenando o cnpj:
 
