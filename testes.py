@@ -10,7 +10,6 @@ def execute_sql_file(file_path, data_path):
        
         sql_commands = file.read().replace('${data_path}', data_path).split(';')
 
-
     conn = duckdb.connect(database=':memory:') 
 
     for command in sql_commands:
@@ -21,7 +20,6 @@ def execute_sql_file(file_path, data_path):
             except Exception as e:
                 print(f"Erro ao executar o comando: {command}")
                 print(e)
-
 
 sql_file_path = os.path.join('/home/fribeiro/src/cnpj/app/scripts', 'CNPJ.sql')
 
