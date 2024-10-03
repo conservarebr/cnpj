@@ -1,5 +1,0 @@
-# Ignorar arquivos CSV de estabelecimentos
-/home/fribeiro/src/cnpj/csv/estabelecimentos_*.csv
-
-# Ignorar arquivos temporários
-*.tmp
