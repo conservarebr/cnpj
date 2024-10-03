@@ -10,7 +10,4 @@ from app.core.config import Settings
 # Carregar as configurações
 settings = Settings()
 
-from app.core.translate import Translate
-
-objtranslate = Translate()
 

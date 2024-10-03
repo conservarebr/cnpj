@@ -1,5 +1,6 @@
 import os
 from app.core.config import Settings
+from app.sco import settings
 
 # Carregar as configurações
 settings = Settings()
