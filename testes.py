@@ -28,3 +28,27 @@
        # print(f"Arquivo encontrado: {file_path}")
     #else:
         #print(f"Arquivo não encontrado: {file_path}")
+
+
+# testes.py
+import duckdb
+
+from app.core.config import settings
+import os
+
+def execute_sql_file(file_path):
+    # Cria uma conexão com o DuckDB
+    conn = duckdb.connect()
+
+    # Lê o conteúdo do arquivo SQL
+    with open(file_path, 'r') as file:
+        sql_script = file.read()
+
+    # Executa o script SQL
+    conn.execute(sql_script)
+    conn.commit()
+    conn.close()
+
+if __name__ == "__main__":
+    sql_file_path = os.path.join(settings.data_path, 'scripts', 'cnpj.sql')
+    execute_sql_file(sql_file_path)
