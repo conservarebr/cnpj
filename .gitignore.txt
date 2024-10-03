@@ -1,0 +1,2 @@
+# Ignorar arquivos CSV de estabelecimentos
+csv/estabelecimentos_*.csv
