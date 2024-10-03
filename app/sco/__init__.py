@@ -6,8 +6,6 @@ import os
 # Carregar o arquivo .env
 load_dotenv("/home/fribeiro/src/cnpj/example.env")
 
-
-
 # Carregar as configurações
 settings = Settings()
 
