@@ -1,52 +1,28 @@
-#import os
-#from app.core.config import Settings
-#from app.sco import settings
-
-# Carregar as configurações
-#settings = Settings()
-
-# Listar os arquivos CSV que você espera encontrar
-#csv_files = [
-    #"cnaes.csv",
-    #"municipios.csv",
-    #"estabelecimentos0.csv",
-    #"estabelecimentos1.csv",
-    #"estabelecimentos2.csv",
-    #"estabelecimentos3.csv",
-    #"estabelecimentos4.csv",
-    #"estabelecimentos5.csv",
-   # "estabelecimentos6.csv",
-   # "estabelecimentos7.csv",
-   # "estabelecimentos8.csv",
-   # "estabelecimentos9.csv",
-#]
-
-# Verificar se cada arquivo existe
-#for csv_file in csv_files:
-    #file_path = os.path.join(settings.data_path, csv_file)
-    #if os.path.exists(file_path):
-       # print(f"Arquivo encontrado: {file_path}")
-    #else:
-        #print(f"Arquivo não encontrado: {file_path}")
 
 import duckdb
-
-from app.core.config import settings
 import os
+from app.core.config import Settings
 
-def execute_sql_file(file_path):
-    # Cria uma conexão com o DuckDB
-    conn = duckdb.connect()
+settings = Settings()
 
-    # Lê o conteúdo do arquivo SQL
+def execute_sql_file(file_path, data_path):
     with open(file_path, 'r') as file:
-        sql_script = file.read()
+       
+        sql_commands = file.read().replace('${data_path}', data_path).split(';')
 
-    # Executa o script SQL
-    conn.execute(sql_script)
-    conn.commit()
-    conn.close()
 
-if __name__ == "__main__":
-    sql_file_path = os.path.join(settings.data_path, 'scripts', 'CNPJ.sql')
-    execute_sql_file(sql_file_path)
+    conn = duckdb.connect(database=':memory:') 
+
+    for command in sql_commands:
+        command = command.strip()
+        if command: 
+            try:
+                conn.execute(command)
+            except Exception as e:
+                print(f"Erro ao executar o comando: {command}")
+                print(e)
+
+
+sql_file_path = os.path.join('/home/fribeiro/src/cnpj/app/scripts', 'CNPJ.sql')
+
+execute_sql_file(sql_file_path, settings.data_path)
