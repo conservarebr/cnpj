@@ -4,7 +4,7 @@ import os
 data_path = "/mnt/disk1/data/cnpj"
 conn = duckdb.connect(database=':memory:')
 
-# Municipios 
+#### Municipios ####
 
 conn.execute("""
 CREATE TABLE municipios (
@@ -24,9 +24,9 @@ COPY municipios FROM '{municipios_file_path}'
     #print(row)
     
     
-# Estabelecimentos
+#### Estabelecimentos ####
 
-estabelecimentos_files = [os.path.join(data_path, f'estabelecimentos_{i}.csv') for i in range(10)]
+estabelecimentos_files = [os.path.join(data_path, f'estabelecimentos{i}.csv') for i in range(10)]
 
 conn.execute("""
 CREATE TABLE estabelecimentos AS 
@@ -54,9 +54,13 @@ FROM read_csv_auto(
 ) AS subquery;
 """.format("', '".join(estabelecimentos_files)))
 
-
 result = conn.execute("SELECT * FROM estabelecimentos LIMIT 10").fetchall()
 for row in result:
+    print(row)
+    
+    
+result_a = conn.execute("SELECT count (*) FROM estabelecimentos").fetchall()
+for row in result_a:
     print(row)
 
 conn.close()
