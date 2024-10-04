@@ -1,29 +1,40 @@
 import duckdb
-from app.core.config import settings
 import os
-from jinja2 import Environment, FileSystemLoader
 
-def execute_sql_file(file_path, data_path):
-    env = Environment(loader=FileSystemLoader(os.path.dirname(file_path)))
-    template = env.get_template(os.path.basename(file_path))
-    sql_script = template.render(data_path=data_path)
+# Define the data path
+data_path = "/mnt/disk1/data/cnpj"
 
-    conn = duckdb.connect(database=':memory:')
-    
-    sql_commands = sql_script.split(';')
-    for command in sql_commands:
-        command = command.strip()
-        if command:  
-            try:
-                conn.execute(command)
-            except Exception as e:
-                print(f"Erro ao executar comando: {command}")
-                print(e)
+conn = duckdb.connect()
 
-    conn.commit()
-    conn.close()
+conn.execute("""
+CREATE TABLE cnae (
+    codigo VARCHAR PRIMARY KEY,
+    descricao VARCHAR
+);
+""")
 
-if __name__ == "__main__":
-    sql_file_path = os.path.join('/home/fribeiro/src/cnpj/app/scripts', 'CNPJ.sql')  
-    execute_sql_file(sql_file_path, settings.data_path)
-    print("Script SQL executado com sucesso.")
+cnae_file_path = os.path.join(data_path, 'cnaes.csv')
+conn.execute(f"""
+COPY cnae FROM '{cnae_file_path}' WITH (FORMAT 'csv', DELIMITER ';', HEADER false, ENCODING 'UTF8');
+""")
+
+
+cnae_count = conn.execute("SELECT COUNT(*) FROM cnae").fetchone()[0]
+print(f"Count of records in cnae: {cnae_count}")
+
+conn.execute("""
+CREATE TABLE municipios (
+    codigo VARCHAR PRIMARY KEY,
+    descricao VARCHAR
+);
+""")
+
+municipios_file_path = os.path.join(data_path, 'municipios.csv')
+conn.execute(f"""
+COPY municipios FROM '{municipios_file_path}' WITH (FORMAT 'csv', DELIMITER ';', HEADER false, ENCODING 'UTF8');
+""")
+
+municipios_count = conn.execute("SELECT COUNT(*) FROM municipios").fetchone()[0]
+print(f"Count of records in municipios: {municipios_count}")
+
+conn.close()
