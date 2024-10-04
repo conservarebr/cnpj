@@ -34,12 +34,7 @@ COPY municipios FROM '{municipios_file_path}'
     (FORMAT CSV, DELIMITER ';', HEADER TRUE, QUOTE '"', ESCAPE '"', ENCODING 'UTF8', IGNORE_ERRORS TRUE);
 """)
 
-municipios_count = conn.execute("SELECT COUNT(*) FROM municipios").fetchone()[0]
-print(f"Count of records in municipios: {municipios_count}")
-
-result = conn.execute("SELECT * FROM municipios LIMIT 10").fetchall()
-
-for row in result:
-    print(row)
+municipios_select = conn.execute("SELECT * FROM municipios limit 10").fetchone()[0]
+print(f"As primeiras 10 linhas de municipios: {municipios_select}")
 
 conn.close()
