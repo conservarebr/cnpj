@@ -27,4 +27,3 @@ if __name__ == "__main__":
     sql_file_path = os.path.join('/home/fribeiro/src/cnpj/app/scripts', 'CNPJ.sql')  
     execute_sql_file(sql_file_path, settings.data_path)
     print("Script SQL executado com sucesso.")
-
