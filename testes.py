@@ -10,7 +10,6 @@ def execute_sql_file(file_path, data_path):
 
     conn = duckdb.connect(database=':memory:')
     
-    # Separar as instruções SQL
     sql_commands = sql_script.split(';')
     for command in sql_commands:
         command = command.strip()
@@ -25,7 +24,7 @@ def execute_sql_file(file_path, data_path):
     conn.close()
 
 if __name__ == "__main__":
-    sql_file_path = os.path.join('/home/fribeiro/src/cnpj/app/scripts', 'CNPJ.SQL')  
+    sql_file_path = os.path.join('/home/fribeiro/src/cnpj/app/scripts', 'CNPJ.sql')  
     execute_sql_file(sql_file_path, settings.data_path)
     print("SQL script executed successfully.")
 
