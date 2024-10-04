@@ -17,7 +17,7 @@ def execute_sql_file(file_path, data_path):
             try:
                 conn.execute(command)
             except Exception as e:
-                print(f"Error executing command: {command}")
+                print(f"Erro ao executar comando: {command}")
                 print(e)
 
     conn.commit()
@@ -26,5 +26,5 @@ def execute_sql_file(file_path, data_path):
 if __name__ == "__main__":
     sql_file_path = os.path.join('/home/fribeiro/src/cnpj/app/scripts', 'CNPJ.sql')  
     execute_sql_file(sql_file_path, settings.data_path)
-    print("SQL script executed successfully.")
+    print("Script SQL executado com sucesso.")
 
