@@ -1,7 +1,6 @@
 import duckdb
 import os
 
-# Define the data path
 data_path = "/mnt/disk1/data/cnpj"
 
 conn = duckdb.connect()
@@ -15,9 +14,9 @@ CREATE TABLE cnae (
 
 cnae_file_path = os.path.join(data_path, 'cnaes.csv')
 conn.execute(f"""
-COPY cnae FROM '{cnae_file_path}' WITH (FORMAT 'csv', DELIMITER ';', HEADER false, ENCODING 'UTF8');
+COPY cnae FROM '{cnae_file_path}' 
+    (FORMAT CSV, DELIMITER ';', HEADER TRUE, QUOTE '"', ESCAPE '"', ENCODING 'UTF8', IGNORE_ERRORS TRUE);
 """)
-
 
 cnae_count = conn.execute("SELECT COUNT(*) FROM cnae").fetchone()[0]
 print(f"Count of records in cnae: {cnae_count}")
@@ -31,10 +30,16 @@ CREATE TABLE municipios (
 
 municipios_file_path = os.path.join(data_path, 'municipios.csv')
 conn.execute(f"""
-COPY municipios FROM '{municipios_file_path}' WITH (FORMAT 'csv', DELIMITER ';', HEADER false, ENCODING 'UTF8');
+COPY municipios FROM '{municipios_file_path}' 
+    (FORMAT CSV, DELIMITER ';', HEADER TRUE, QUOTE '"', ESCAPE '"', ENCODING 'UTF8', IGNORE_ERRORS TRUE);
 """)
 
 municipios_count = conn.execute("SELECT COUNT(*) FROM municipios").fetchone()[0]
 print(f"Count of records in municipios: {municipios_count}")
+
+result = conn.execute("SELECT * FROM municipios LIMIT 10").fetchall()
+
+for row in result:
+    print(row)
 
 conn.close()
