@@ -6,7 +6,6 @@ data_fribeiro = "/home/fribeiro"
 conn = duckdb.connect(database=':memory:')
 
 #### Municipios ####
-
 conn.execute("""
 CREATE TABLE municipios (
     codigo VARCHAR PRIMARY KEY,
@@ -23,13 +22,11 @@ COPY municipios FROM '{municipios_file_path}'
 result = conn.execute("SELECT * FROM municipios LIMIT 10").fetchall()
 for row in result:
     print(row)
-    
-    
-#### Estabelecimentos ####
 
+#### Estabelecimentos ####
 estabelecimentos_files = [os.path.join(data_path, f'estabelecimentos{i}.csv') for i in range(10)]
 
-conn.execute("""
+conn.execute(f"""
 CREATE TABLE estabelecimentos AS 
 SELECT 
     column00 AS cnpj_basico,
@@ -37,7 +34,7 @@ SELECT
     column02 AS cnpj_dv,
     column05 AS situacao_cadastral,
     column11 AS cnae_fiscal_principal,
-    column12 AS cnae_fiscal_secundaria,
+    TRIM(split.value) AS cnae_secundaria,
     column13 AS tipo_de_logradouro,
     column14 AS logradouro,
     column15 AS numero,
@@ -53,15 +50,19 @@ FROM read_csv_auto(
     ignore_errors = true,
     union_by_name = true,
     filename = true
-) AS subquery;
+) AS subquery
+CROSS JOIN UNNEST(string_split(column12, ',')) AS split(value);
 """.format("', '".join(estabelecimentos_files)))
 
 result = conn.execute("SELECT * FROM estabelecimentos LIMIT 10").fetchall()
 for row in result:
     print(row)
-    
-#### Cnae ####
 
+result = conn.execute("SELECT count(*) FROM estabelecimentos").fetchall()
+for row in result:
+    print(row)
+
+#### Cnae ####
 conn.execute("""
 CREATE TABLE cnae (
     codigo VARCHAR PRIMARY KEY,
@@ -79,43 +80,4 @@ result = conn.execute("SELECT * FROM cnae LIMIT 10").fetchall()
 for row in result:
     print(row)
     
-#### Ajustes: Estabelecimentos ####
-
-conn.execute("""
-CREATE TABLE temp_estabelecimentos AS
-SELECT 
-    cnpj_basico,
-    cnpj_ordem,
-    cnpj_dv,
-    situacao_cadastral,
-    cnae_fiscal_principal,
-    TRIM(split.value) AS cnae_secundaria,
-    tipo_de_logradouro,
-    logradouro,
-    numero,
-    complemento,
-    bairro,
-    cep,
-    uf, 
-    municipio
-FROM estabelecimentos
-CROSS JOIN UNNEST(string_split(cnae_fiscal_secundaria, ',')) AS split(value);
-""")
-
-conn.execute("DROP TABLE estabelecimentos;")
-
-conn.execute("ALTER TABLE temp_estabelecimentos RENAME TO estabelecimentos;")
-
-result = conn.execute("SELECT * FROM estabelecimentos LIMIT 10").fetchall()
-for row in result:
-    print(row)
-
-result = conn.execute("SELECT count(*) FROM estabelecimentos").fetchall()
-for row in result:
-    print(row)
-    
-#### Join estabelecimentos x Municipio ####
-
-
-
 conn.close()
