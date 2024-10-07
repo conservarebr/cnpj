@@ -2,6 +2,7 @@ import duckdb
 import os
 
 data_path = "/mnt/disk1/data/cnpj"
+data_fribeiro = "/home/fribeiro"
 conn = duckdb.connect(database=':memory:')
 
 #### Municipios ####
@@ -58,28 +59,22 @@ result = conn.execute("SELECT * FROM estabelecimentos LIMIT 10").fetchall()
 for row in result:
     print(row)
     
-    
-result_a = conn.execute("SELECT count (*) FROM estabelecimentos").fetchall()
-for row in result_a:
-    print(row)
-
-
 #### Cnae ####
 
 conn.execute("""
-CREATE TABLE cnaes (
+CREATE TABLE cnae (
     codigo VARCHAR PRIMARY KEY,
     descricao VARCHAR
 );
 """)
 
-cnae_file_path = os.path.join(data_path, 'cnaes.csv')
+cnae_file_path = os.path.join(data_fribeiro, 'cnae.csv')
 conn.execute(f"""
-COPY cnaes FROM '{cnae_file_path}' 
+COPY cnae FROM '{cnae_file_path}' 
     (FORMAT CSV, DELIMITER ';', HEADER TRUE, QUOTE '"', ESCAPE '"', ENCODING 'UTF8', IGNORE_ERRORS TRUE);
 """)
 
-result = conn.execute("SELECT * FROM cnaes LIMIT 10").fetchall()
+result = conn.execute("SELECT * FROM cnae LIMIT 10").fetchall()
 for row in result:
     print(row)
     
