@@ -63,8 +63,6 @@ result_a = conn.execute("SELECT count (*) FROM estabelecimentos").fetchall()
 for row in result_a:
     print(row)
 
-conn.close()
-
 
 #### Cnae ####
 
@@ -84,3 +82,5 @@ COPY cnaes FROM '{cnae_file_path}'
 result = conn.execute("SELECT * FROM cnaes LIMIT 10").fetchall()
 for row in result:
     print(row)
+    
+conn.close()
