@@ -75,13 +75,3 @@ COPY csv TO '{saida}'
 
 print(f"A tabela 'csv' foi salva em {saida}")
 conn.close()
-
-
-
-#result = conn.execute("SELECT * FROM csv LIMIT 10").fetchall()
-#for row in result:
-    #print(row)
-
-#result = conn.execute("SELECT count(*) FROM csv").fetchall()
-#for row in result:
-    #print(row)
