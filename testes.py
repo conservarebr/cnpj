@@ -19,9 +19,9 @@ COPY municipios FROM '{municipios_file_path}'
     (FORMAT CSV, DELIMITER ';', HEADER TRUE, QUOTE '"', ESCAPE '"', ENCODING 'UTF8', IGNORE_ERRORS TRUE);
 """)
 
-#result = conn.execute("SELECT * FROM municipios LIMIT 10").fetchall()
-#for row in result:
-    #print(row)
+result = conn.execute("SELECT * FROM municipios LIMIT 10").fetchall()
+for row in result:
+    print(row)
     
     
 #### Estabelecimentos ####
@@ -64,3 +64,23 @@ for row in result_a:
     print(row)
 
 conn.close()
+
+
+#### Cnae ####
+
+conn.execute("""
+CREATE TABLE cnaes (
+    codigo VARCHAR PRIMARY KEY,
+    descricao VARCHAR
+);
+""")
+
+cnae_file_path = os.path.join(data_path, 'cnaes.csv')
+conn.execute(f"""
+COPY cnaes FROM '{cnae_file_path}' 
+    (FORMAT CSV, DELIMITER ';', HEADER TRUE, QUOTE '"', ESCAPE '"', ENCODING 'UTF8', IGNORE_ERRORS TRUE);
+""")
+
+result = conn.execute("SELECT * FROM cnaes LIMIT 10").fetchall()
+for row in result:
+    print(row)
