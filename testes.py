@@ -20,10 +20,6 @@ COPY cnae FROM '{cnae_file_path}'
     (FORMAT CSV, DELIMITER ';', HEADER TRUE, QUOTE '"', ESCAPE '"', ENCODING 'UTF8', IGNORE_ERRORS TRUE);
 """)
 
-#result = conn.execute("SELECT * FROM cnae LIMIT 10").fetchall()
-#for row in result:
-   #print(row)
-
 #### Municipios ####
 
 conn.execute("""
@@ -39,10 +35,6 @@ COPY municipios FROM '{municipios_file_path}'
     (FORMAT CSV, DELIMITER ';', HEADER TRUE, QUOTE '"', ESCAPE '"', ENCODING 'UTF8', IGNORE_ERRORS TRUE);
 """)
 
-#result = conn.execute("SELECT * FROM municipios LIMIT 10").fetchall()
-#for row in result:
-    #print(row)
-    
 #### Estabelecimentos ####
 
 estabelecimentos_files = [os.path.join(data_path, f'estabelecimentos{i}.csv') for i in range(10)]
@@ -71,18 +63,11 @@ FROM read_csv_auto(
     ignore_errors = true,
     union_by_name = true,
     filename = true
-) AS subquery;
+) AS subquery
+WHERE column05 = '02';
 """.format("', '".join(estabelecimentos_files)))
-
-#result = conn.execute("SELECT * FROM estabelecimentos LIMIT 10").fetchall()
-#for row in result:
-    #print(row)
     
-#### Ajuste 1 : Filtrando Apenas os cnpjs ativos ####
-
-
-    
-#### Ajuste 2: Realizando o split em Estabelecimentos ####
+#### Ajuste 1: Realizando o split em Estabelecimentos ####
 
 conn.execute("""
 CREATE TABLE temp_estabelecimentos AS
@@ -103,13 +88,13 @@ SELECT
     municipio
 FROM estabelecimentos
 CROSS JOIN UNNEST(string_split(cnae_fiscal_secundaria, ',')) AS split(value);
+
 """)
 
 conn.execute("DROP TABLE estabelecimentos;")
-
 conn.execute("ALTER TABLE temp_estabelecimentos RENAME TO estabelecimentos;")
 
-#### Ajuste 3: Realizando o Join Estabelecimentos x Municipios ####
+#### Ajuste 2: Realizando o Join Estabelecimentos x Municipios ####
     
 conn.execute(""" 
 ALTER TABLE estabelecimentos ADD COLUMN municipio_descricao VARCHAR; 
@@ -122,15 +107,7 @@ FROM municipios m
 WHERE e.municipio = m.codigo; 
 """)
 
-#result = conn.execute("SELECT * FROM estabelecimentos LIMIT 10").fetchall()
-#for row in result:
-    #print(row)
-
-#result = conn.execute("SELECT count(*) FROM estabelecimentos").fetchall()
-#for row in result:
-    #print(row)
-
-#### Ajuste 4: Filtrando os Cnaes desejados ####
+#### Ajuste 3: Filtrando os Cnaes desejados ####
 
 cnae_filtro = [
     '4110700', '6435201', '6470101', '6470103', 
@@ -141,30 +118,52 @@ cnae_filtro = [
 cnae_filtro_str = "', '".join(cnae_filtro)
 
 conn.execute(f"""
-CREATE TABLE csv AS
-SELECT *
+CREATE TABLE temp AS
+SELECT DISTINCT *
 FROM estabelecimentos
 WHERE cnae_fiscal_principal IN ('{cnae_filtro_str}')
    OR cnae_secundaria IN ('{cnae_filtro_str}');
 """)
 
-#result = conn.execute("SELECT * FROM csv LIMIT 10").fetchall()
-#for row in result:
-    #print(row)
+#### Ajuste 4: Concatenando variaveis ####
 
-#result = conn.execute("SELECT count(*) FROM csv").fetchall()
-#for row in result:
-    #print(row)
+conn.execute("""ALTER TABLE temp ADD COLUMN cnpj_completo VARCHAR;""")
+conn.execute("""ALTER TABLE temp ADD COLUMN endereco VARCHAR;""")
+conn.execute("""ALTER TABLE temp ADD COLUMN endereco_editado VARCHAR;""")
+
+conn.execute(""" 
+UPDATE temp
+SET 
+    cnpj_completo = CONCAT(cnpj_basico, cnpj_ordem, cnpj_dv),
+    endereco = CONCAT(tipo_de_logradouro, ' ', logradouro, ' ', numero, ' ', bairro, ' ', municipio_descricao, ' ', uf, ' ', cep),
+    endereco_editado = CONCAT(tipo_de_logradouro, ' ', logradouro, ' ', numero, ' ', bairro, ' ', municipio_descricao, ' ', uf);
+""")
+
+#### Ajuste 5: Selecionando apenas os campos necessarios ####
+
+conn.execute("""
+CREATE TABLE csv AS
+SELECT cnpj_completo, endereco, endereco_editado, cep
+FROM temp;
+""")
+
+result = conn.execute("SELECT * FROM csv LIMIT 10").fetchall()
+for row in result:
+    print(row)
+
+result = conn.execute("SELECT count(*) FROM csv").fetchall()
+for row in result:
+    print(row)
     
 #### Salvando em csv ####
-    
-#output_file_path = os.path.join('C:\\Users\\RibeiroF\\Downloads', 'cnpj.csv')
 
-#conn.execute(f"""
-#COPY csv TO '{output_file_path}' 
-    #(FORMAT CSV, DELIMITER ';', HEADER TRUE, QUOTE '"', ESCAPE '"', ENCODING 'UTF8');
-#""")
+saida = os.path.join(data_fribeiro, 'Teste.csv')
 
-#print(f"Tabela salva em {output_file_path}")
+conn.execute(f"""
+COPY csv TO '{saida}' 
+    (FORMAT CSV, DELIMITER ';', HEADER TRUE, ENCODING 'UTF8');
+""")
+
+print(f"A tabela 'csv' foi salva em {saida}")
     
 conn.close()
