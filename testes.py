@@ -5,6 +5,25 @@ data_path = "/mnt/disk1/data/cnpj"
 data_fribeiro = "/home/fribeiro"
 conn = duckdb.connect(database=':memory:')
 
+#### Cnae ####
+
+conn.execute("""
+CREATE TABLE cnae (
+    codigo VARCHAR PRIMARY KEY,
+    descricao VARCHAR
+);
+""")
+
+cnae_file_path = os.path.join(data_fribeiro, 'cnae.csv')
+conn.execute(f"""
+COPY cnae FROM '{cnae_file_path}' 
+    (FORMAT CSV, DELIMITER ';', HEADER TRUE, QUOTE '"', ESCAPE '"', ENCODING 'UTF8', IGNORE_ERRORS TRUE);
+""")
+
+result = conn.execute("SELECT * FROM cnae LIMIT 10").fetchall()
+for row in result:
+    print(row)
+
 #### Municipios ####
 
 conn.execute("""
@@ -59,26 +78,9 @@ result = conn.execute("SELECT * FROM estabelecimentos LIMIT 10").fetchall()
 for row in result:
     print(row)
     
-#### Cnae ####
+#### Ajuste 1: Realizando o split em Estabelecimentos ####   
 
-conn.execute("""
-CREATE TABLE cnae (
-    codigo VARCHAR PRIMARY KEY,
-    descricao VARCHAR
-);
-""")
-
-cnae_file_path = os.path.join(data_fribeiro, 'cnae.csv')
-conn.execute(f"""
-COPY cnae FROM '{cnae_file_path}' 
-    (FORMAT CSV, DELIMITER ';', HEADER TRUE, QUOTE '"', ESCAPE '"', ENCODING 'UTF8', IGNORE_ERRORS TRUE);
-""")
-
-result = conn.execute("SELECT * FROM cnae LIMIT 10").fetchall()
-for row in result:
-    print(row)
-    
-#### Ajuste 1: Realizando o split em Estabelecimentos ####
+#### Ajuste : Realizando o split em Estabelecimentos ####
 
 conn.execute("""
 CREATE TABLE temp_estabelecimentos AS
@@ -154,14 +156,6 @@ for row in result:
     
 #### Salvando em csv ####
     
-output_file_path = os.path.join('C:/Users/RibeiroF/Downloads/', 'filtered_estabelecimentos.csv')
-
-conn.execute(f"""
-COPY csv TO '{output_file_path}' 
-    (FORMAT CSV, DELIMITER ';', HEADER TRUE, QUOTE '"', ESCAPE '"', ENCODING 'UTF8');
-""")
-
-print(f"Tabela salva em {output_file_path}")
     
 conn.close()
 
