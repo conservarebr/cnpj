@@ -44,7 +44,8 @@ SELECT
     column16 AS complemento,
     column17 AS bairro,
     column18 AS cep,
-    column19 AS uf
+    column19 AS uf,
+    column19 AS municipio
 FROM read_csv_auto(
     ['{0}'],
     sep = ';',
@@ -78,4 +79,43 @@ result = conn.execute("SELECT * FROM cnae LIMIT 10").fetchall()
 for row in result:
     print(row)
     
+#### Ajustes: Estabelecimentos ####
+
+conn.execute("""
+CREATE TABLE temp_estabelecimentos AS
+SELECT 
+    cnpj_basico,
+    cnpj_ordem,
+    cnpj_dv,
+    situacao_cadastral,
+    cnae_fiscal_principal,
+    TRIM(split.value) AS cnae_secundaria,
+    tipo_de_logradouro,
+    logradouro,
+    numero,
+    complemento,
+    bairro,
+    cep,
+    uf, 
+    municipio
+FROM estabelecimentos
+CROSS JOIN UNNEST(string_split(cnae_fiscal_secundaria, ',')) AS split(value);
+""")
+
+conn.execute("DROP TABLE estabelecimentos;")
+
+conn.execute("ALTER TABLE temp_estabelecimentos RENAME TO estabelecimentos;")
+
+result = conn.execute("SELECT * FROM estabelecimentos LIMIT 10").fetchall()
+for row in result:
+    print(row)
+
+result = conn.execute("SELECT count(*) FROM estabelecimentos").fetchall()
+for row in result:
+    print(row)
+    
+#### Join estabelecimentos x Municipio ####
+
+
+
 conn.close()
