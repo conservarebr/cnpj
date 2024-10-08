@@ -29,4 +29,3 @@ def geocode_addresses(caminho_arquivo, num_linhas=None):
     logging.info(f"O arquivo geocodificado foi salvo em {output_file}")
     
 geocode_addresses("/home/fribeiro/Teste.csv", num_linhas=None)
-
