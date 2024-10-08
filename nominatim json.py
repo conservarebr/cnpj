@@ -28,7 +28,6 @@ def geocode_addresses(file_path, num_rows=None):
     
     df = pd.read_csv(file_path, sep=';', encoding='UTF-8')
     
-    # Se num_rows não for especificado, geocodifica todo o DataFrame
     if num_rows is not None:
         df = df.head(num_rows)
 
@@ -47,6 +46,5 @@ def geocode_addresses(file_path, num_rows=None):
     print(f"O arquivo geocodificado foi salvo em {saida_geocodificado}")
     conn.close()
 
-# Exemplo de chamada da função
 geocode_addresses("/home/fribeiro/Teste.csv", num_rows=1000)  # Para geocodificar o número de linhas desejado
 # geocode_addresses("/home/fribeiro/Teste.csv")  # Para geocodificar todo o arquivo
