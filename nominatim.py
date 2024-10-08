@@ -1,46 +1,38 @@
+import duckdb
 import os
 import pandas as pd
 from geopy.geocoders import Nominatim
 from geopy.exc import GeocoderTimedOut
 import time
 
-data_fribeiro = "/home/fribeiro"
-
-# Inicializar o geolocator
-geolocator = Nominatim(user_agent="geocoder")
-
-# Função para geocodificar o endereço
 def geocode_address(address):
+    geolocator = Nominatim(user_agent="SeuNomeOuIdentificacao")
     try:
-        location = geolocator.geocode(address)
-        if location:
-            return location.latitude, location.longitude
-        else:
-            return None, None
+        location = geolocator.geocode(address, timeout=10)
+        return (location.latitude, location.longitude) if location else (None, None)
     except GeocoderTimedOut:
-        time.sleep(1)
-        return geocode_address(address)
+        return geocode_address(address) 
 
-# Função para carregar CSV e retornar endereços
-def load_enderecos_from_csv(file_name):
-    file_path = os.path.join(data_fribeiro, file_name)
-    df = pd.read_csv(file_path, delimiter=';', encoding='utf-8')
-    return df['endereco_editado'].tolist()
+data_fribeiro = "/home/fribeiro"
+conn = duckdb.connect(database=':memory:')
 
-# Geocodificação dos endereços
-def geocode_addresses(enderecos):
-    results = []
-    
-    for address in enderecos:
-        lat, lon = geocode_address(address)
-        results.append((address, lat, lon))
-    
-    return results
+saida = os.path.join(data_fribeiro, 'Teste.csv')
+df = pd.read_csv(saida, sep=';', encoding='UTF-8')
 
-if __name__ == "__main__":
-    enderecos = load_enderecos_from_csv('Teste.csv')  # Nome do CSV
-    geocodificados = geocode_addresses(enderecos)
-    
-    # Exibir os resultados
-    for endereco, latitude, longitude in geocodificados:
-        print(f"Endereço: {endereco}, Latitude: {latitude}, Longitude: {longitude}")
+latitudes = []
+longitudes = []
+
+for endereco in df['endereco_editado']:
+    lat, lon = geocode_address(endereco)
+    latitudes.append(lat)
+    longitudes.append(lon)
+    time.sleep(1) 
+
+df['latitude'] = latitudes
+df['longitude'] = longitudes
+
+saida_geocodificado = os.path.join(data_fribeiro, 'Teste_geocodificado.csv')
+df.to_csv(saida_geocodificado, sep=';', index=False, encoding='UTF-8')
+
+print(f"O arquivo geocodificado foi salvo em {saida_geocodificado}")
+conn.close()
