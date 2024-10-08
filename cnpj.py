@@ -45,7 +45,7 @@ estabelecimentos_files_str = ', '.join([f"'{file}'" for file in estabelecimentos
 
 conn.execute(f"""
 CREATE TABLE csv AS
-SELECT 
+SELECT DISTINCT
     CONCAT(e.column00, e.column01, e.column02) AS cnpj_completo,
     CONCAT(e.column13, ' ', e.column14, ' ', e.column15, ' ', e.column17, ' ', m.descricao, ' ', e.column19, ' ', e.column18) AS endereco,
     CONCAT(e.column13, ' ', e.column14, ' ', e.column15, ' ', e.column17, ' ', m.descricao, ' ', e.column19) AS endereco_editado,
