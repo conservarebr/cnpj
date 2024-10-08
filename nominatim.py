@@ -27,4 +27,4 @@ def geocode_addresses(caminho_arquivo, num_linhas=None):
     
     logging.info(f"O arquivo geocodificado foi salvo em {caminho_arquivo}")
 
-geocode_addresses("/home/fribeiro/Teste.csv", num_linhas=10)
+geocode_addresses("/home/fribeiro/Teste.csv", num_linhas=100000)
