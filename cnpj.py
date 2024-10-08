@@ -59,7 +59,7 @@ FROM read_csv_auto(
     filename = true
 ) AS e
 JOIN municipios m ON e.column20 = m.codigo
-CROSS JOIN UNNEST(string_split(e.column12, ',')) AS cnae_secundaria(value)  -- Altera para dar um alias
+CROSS JOIN UNNEST(string_split(e.column12, ',')) AS cnae_secundaria(value)
 WHERE e.column05 = '02' AND (
     e.column11 IN ('{cnae_filtro_str}') OR 
     TRIM(value) IN ('{cnae_filtro_str}')  -- Usa o alias aqui
