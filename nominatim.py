@@ -19,11 +19,14 @@ def geocode_address(endereco):
 def geocode_addresses(caminho_arquivo, num_linhas=None):
     logging.info(f"Iniciando a geocodificação de endereços a partir do arquivo: {caminho_arquivo}")
     df = pd.read_csv(caminho_arquivo, sep=';', encoding='utf-8').head(num_linhas)
+    
     with ThreadPoolExecutor() as executor:
         df['resultado_geocodificacao'] = list(executor.map(geocode_address, df['endereco_editado']))
     df['resultado_geocodificacao'] = df['resultado_geocodificacao'].apply(lambda x: json.dumps(x, ensure_ascii=False) if x else None)
+    
     output_file = os.path.join(os.path.dirname(caminho_arquivo), 'Teste_geocodificado.csv')
     df.to_csv(output_file, sep=';', index=False, encoding='utf-8')
     logging.info(f"O arquivo geocodificado foi salvo em {output_file}")
+    
 geocode_addresses("/home/fribeiro/Teste.csv", num_linhas=None)
 
