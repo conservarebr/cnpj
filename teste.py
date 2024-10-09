@@ -8,11 +8,9 @@ from concurrent.futures import ThreadPoolExecutor
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 def get_data_fribeiro():
-    """Retorna o caminho para o diretório de dados."""
     return "/home/fribeiro"
 
 def get_cnae_filtro():
-    """Retorna a lista de filtros de CNAE."""
     return [
         '4110700', '6435201', '6470101', '6470103', 
         '6810201', '6810202', '6810203', '6821801', 
@@ -43,8 +41,6 @@ def geocode_addresses(caminho_arquivo, num_linhas=None):
 def main():
     data_fribeiro = get_data_fribeiro()
     cnae_filtro = get_cnae_filtro()
-    cnae_filtro_str = "', '".join(cnae_filtro)
-    
     geocode_addresses(os.path.join(data_fribeiro, 'Teste.csv'), num_linhas=10)
 
 if __name__ == "__main__":
