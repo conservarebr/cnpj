@@ -91,10 +91,7 @@ FROM read_csv_auto(
 ) AS e
 JOIN municipios m ON e.column20 = m.codigo
 CROSS JOIN UNNEST(string_split(e.column12, ',')) AS cnae_secundaria(value)
-WHERE e.column05 = '02' AND (
-    e.column11 IN ('{cnae_filtro_str}') OR 
-    TRIM(value) IN ('{cnae_filtro_str}')
-);
+WHERE e.column05 = '02';  -- Removido o filtro de cnae_filtro
 """)
 
 #### Salvando em csv ####
@@ -112,6 +109,6 @@ COPY csv_02 TO '{saida_02}'
     (FORMAT CSV, DELIMITER ';', HEADER TRUE, ENCODING 'UTF8');
 """)
 
-print(f"A tabela 'csv' foi salva em {saida_02}")
+print(f"A tabela 'csv_02' foi salva em {saida_02}")
 
 conn.close()
