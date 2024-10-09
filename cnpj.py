@@ -14,12 +14,10 @@ cnae_filtro = [
 cnae_filtro_str = "', '".join(cnae_filtro)
 
 #### CNAE ####
-conn.execute("""
-CREATE TABLE cnae (
+conn.execute("""CREATE TABLE cnae (
     codigo VARCHAR PRIMARY KEY,
     descricao VARCHAR
-);
-""")
+);""")
 cnae_file_path = os.path.join(data_fribeiro, 'cnae.csv')
 conn.execute(f"""
 COPY cnae FROM '{cnae_file_path}' 
@@ -27,12 +25,10 @@ COPY cnae FROM '{cnae_file_path}'
 """)
 
 #### Municipios ####
-conn.execute("""
-CREATE TABLE municipios (
+conn.execute("""CREATE TABLE municipios (
     codigo VARCHAR PRIMARY KEY,
     descricao VARCHAR
-);
-""")
+);""")
 municipios_file_path = os.path.join(data_path, 'municipios.csv')
 conn.execute(f"""
 COPY municipios FROM '{municipios_file_path}' 
@@ -49,7 +45,12 @@ SELECT DISTINCT
     CONCAT(e.column00, e.column01, e.column02) AS cnpj_completo,
     CONCAT(e.column13, ' ', e.column14, ' ', e.column15, ' ', e.column17, ' ', m.descricao, ' ', e.column19, ' ', e.column18) AS endereco,
     CONCAT(e.column13, ' ', e.column14, ' ', e.column15, ' ', e.column17, ' ', m.descricao, ' ', e.column19) AS endereco_editado,
-    e.column18 AS cep
+    e.column18 AS cep,
+    CONCAT(
+        CONCAT(e.column00, e.column01, e.column02),
+        '|https://nominatim.openstreetmap.org/search?addressdetails=1&q=',
+        TRIM(CONCAT(e.column13, ' ', e.column14, ' ', e.column15, ' ', e.column17, ' ', m.descricao, ' ', e.column19))
+    ) AS colecao
 FROM read_csv_auto(
     [{estabelecimentos_files_str}],
     sep = ';',
@@ -62,7 +63,7 @@ JOIN municipios m ON e.column20 = m.codigo
 CROSS JOIN UNNEST(string_split(e.column12, ',')) AS cnae_secundaria(value)
 WHERE e.column05 = '02' AND (
     e.column11 IN ('{cnae_filtro_str}') OR 
-    TRIM(value) IN ('{cnae_filtro_str}')  -- Usa o alias aqui
+    TRIM(value) IN ('{cnae_filtro_str}')
 );
 """)
 
@@ -75,4 +76,3 @@ COPY csv TO '{saida}'
 
 print(f"A tabela 'csv' foi salva em {saida}")
 conn.close()
-
