@@ -29,10 +29,9 @@ async def run(r):
             tasks.append(task)
 
         responses = asyncio.gather(*tasks)
-        await responses
-        print()
+        return await responses
 
 
 def processa(colecao):
-    asyncio.run(run(colecao))
+    return asyncio.run(run(colecao))
     

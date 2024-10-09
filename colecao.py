@@ -9,4 +9,5 @@ with open(file_path, mode='r') as file:
     for linha in leitor:
          colecao.append(linha['colecao'])
          
-processa(colecao)
+resultado = processa(colecao[:10000])
+print()
