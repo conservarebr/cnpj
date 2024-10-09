@@ -26,10 +26,10 @@ def geocode_address(endereco):
         logging.error(f"Erro ao geocodificar o endereço: {endereco}. Erro: {e}")
         return None 
 
-def geocode_addresses(caminho_arquivo, cnae_filtro, num_linhas=None):
+def geocode_addresses(caminho_arquivo, cnae_filtro):
     logging.info(f"Iniciando a geocodificação a partir do arquivo: {caminho_arquivo}")
     
-    df = pd.read_csv(caminho_arquivo, sep=';', encoding='utf-8').head(num_linhas)
+    df = pd.read_csv(caminho_arquivo, sep=';', encoding='utf-8')
     df_filtered = df[df['column11'].isin(cnae_filtro) | df['column12'].isin(cnae_filtro)]
 
     with ThreadPoolExecutor() as executor:
@@ -42,7 +42,9 @@ def geocode_addresses(caminho_arquivo, cnae_filtro, num_linhas=None):
     logging.info(f"O arquivo geocodificado foi salvo em {output_file}")
 
 def main():
-    geocode_addresses(os.path.join(get_data_fribeiro(), 'Teste.csv'), get_cnae_filtro())
+    data_fribeiro = get_data_fribeiro()
+    caminho_arquivo = os.path.join(data_fribeiro, 'Teste.csv')
+    geocode_addresses(caminho_arquivo, get_cnae_filtro())
 
 if __name__ == "__main__":
     main()
