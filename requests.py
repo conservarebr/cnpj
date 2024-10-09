@@ -35,3 +35,4 @@ async def run(r):
 
 def processa(colecao):
     asyncio.run(run(colecao))
+    
