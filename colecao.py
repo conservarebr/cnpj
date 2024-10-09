@@ -1,4 +1,5 @@
 import csv
+from chamadas import processa
 
 colecao = []
 file_path = '/home/fribeiro/Teste.csv'
@@ -8,4 +9,4 @@ with open(file_path, mode='r') as file:
     for linha in leitor:
          colecao.append(linha['colecao'])
          
-print(colecao)
+processa(colecao)

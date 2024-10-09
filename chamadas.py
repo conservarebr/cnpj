@@ -1,7 +1,7 @@
 
 import asyncio
 from aiohttp import ClientSession
-import colecao
+
 
 async def fetch(data, session):
     campos = data.split('|')
@@ -25,7 +25,7 @@ async def run(r):
 
     async with ClientSession() as session:
         for i in r:
-            task = asyncio.ensure_future(bound_fetch(sem, r, session))
+            task = asyncio.ensure_future(bound_fetch(sem, i, session))
             tasks.append(task)
 
         responses = asyncio.gather(*tasks)
