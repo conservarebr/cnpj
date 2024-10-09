@@ -48,7 +48,7 @@ SELECT DISTINCT
     e.column18 AS cep,
     CONCAT(
         CONCAT(e.column00, e.column01, e.column02),
-        '|https://nominatim.openstreetmap.org/search?addressdetails=1&q=',
+        '|http://venus.iocasta.com.br:8080/search.php?q=',
         TRIM(CONCAT(e.column13, ' ', e.column14, ' ', e.column15, ' ', e.column17, ' ', m.descricao, ' ', e.column19))
     ) AS colecao
 FROM read_csv_auto(
