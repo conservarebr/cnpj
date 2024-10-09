@@ -8,7 +8,7 @@ from concurrent.futures import ThreadPoolExecutor
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 def get_data_fribeiro():
-    return "/home/fribeiro"
+    return "/home/fribeiro/bases"
 
 def get_cnae_filtro():
     return [
@@ -26,11 +26,14 @@ def geocode_address(endereco):
         logging.error(f"Erro ao geocodificar o endereço: {endereco}. Erro: {e}")
         return None 
 
-def geocode_addresses(caminho_arquivo, cnae_filtro):
+def geocode_addresses(caminho_arquivo, cnae_filtro, num_linhas=None):
     logging.info(f"Iniciando a geocodificação a partir do arquivo: {caminho_arquivo}")
     
     df = pd.read_csv(caminho_arquivo, sep=';', encoding='utf-8')
-    df_filtered = df[df['column11'].isin(cnae_filtro) | df['column12'].isin(cnae_filtro)]
+    df_filtered = df[df['cnae_primaria'].isin(cnae_filtro) | df['cnae_secundaria'].isin(cnae_filtro)]
+
+    if num_linhas is not None:
+        df_filtered = df_filtered.head(num_linhas)
 
     with ThreadPoolExecutor() as executor:
         df_filtered['resultado_geocodificacao'] = list(executor.map(geocode_address, df_filtered['endereco_editado']))
@@ -41,10 +44,10 @@ def geocode_addresses(caminho_arquivo, cnae_filtro):
     df_filtered.to_csv(output_file, sep=';', index=False, encoding='utf-8')
     logging.info(f"O arquivo geocodificado foi salvo em {output_file}")
 
-def main():
+def main(num_linhas=None):
     data_fribeiro = get_data_fribeiro()
-    caminho_arquivo = os.path.join(data_fribeiro, 'Teste.csv')
-    geocode_addresses(caminho_arquivo, get_cnae_filtro())
+    caminho_arquivo = os.path.join(data_fribeiro, 'Teste_02.csv')
+    geocode_addresses(caminho_arquivo, get_cnae_filtro(), num_linhas)
 
 if __name__ == "__main__":
-    main()
+    main(num_linhas=10)
