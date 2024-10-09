@@ -11,7 +11,7 @@ async def fetch(data, session):
         delay = response.headers.get("DELAY")
         date = response.headers.get("DATE")
         print("{}:{} with delay {}".format(date, response.url, delay))
-        return await f"{cnpj}|{response.text()}" 
+        return f"{cnpj}|{await response.text()}" 
 
 
 async def bound_fetch(sem, url, session):
