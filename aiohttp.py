@@ -1,6 +1,7 @@
 
 import asyncio
 from aiohttp import ClientSession
+import colecao
 
 async def fetch(data, session):
     campos = data.split('|')
