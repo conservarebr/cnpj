@@ -28,4 +28,4 @@ def geocode_addresses(caminho_arquivo, num_linhas=None):
     df.to_csv(output_file, sep=';', index=False, encoding='utf-8')
     logging.info(f"O arquivo geocodificado foi salvo em {output_file}")
     
-geocode_addresses("/home/fribeiro/Teste.csv", num_linhas=None)
+geocode_addresses("/home/fribeiro/bases/Teste.csv", num_linhas=None)

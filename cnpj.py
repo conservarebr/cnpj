@@ -1,8 +1,7 @@
 import duckdb
 import os
 
-data_path = "/mnt/disk1/data/cnpj"
-data_fribeiro = "/home/fribeiro"
+data_fribeiro = "/home/fribeiro/bases"
 conn = duckdb.connect(database=':memory:')
 
 #### Filtro de CNAEs ####
@@ -29,14 +28,14 @@ conn.execute("""CREATE TABLE municipios (
     codigo VARCHAR PRIMARY KEY,
     descricao VARCHAR
 );""")
-municipios_file_path = os.path.join(data_path, 'municipios.csv')
+municipios_file_path = os.path.join(data_fribeiro, 'municipios.csv')
 conn.execute(f"""
 COPY municipios FROM '{municipios_file_path}' 
     (FORMAT CSV, DELIMITER ';', HEADER TRUE, QUOTE '"', ESCAPE '"', ENCODING 'UTF8', IGNORE_ERRORS TRUE);
 """)
 
 #### Estabelecimentos ####
-estabelecimentos_files = [os.path.join(data_path, f'estabelecimentos{i}.csv') for i in range(10)]
+estabelecimentos_files = [os.path.join(data_fribeiro, f'estabelecimentos_{i}.csv') for i in range(10)]
 estabelecimentos_files_str = ', '.join([f"'{file}'" for file in estabelecimentos_files])
 
 conn.execute(f"""
