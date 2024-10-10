@@ -27,6 +27,12 @@ def geocode_addresses(caminho_arquivo, cnaes_desejados, num_linhas=None):
     
     if num_linhas is not None:
         df_filtrado = df_filtrado.head(num_linhas)
+        
+    df_filtrado = df_filtrado.drop(columns=['cnae_primaria', 'cnae_secundaria'], errors='ignore')
+    df_filtrado = df_filtrado.drop_duplicates()
+
+    num_registros = df_filtrado.shape[0]
+    logging.info(f"Número de registros restantes a serem geocodificados: {num_registros}")   
     
     with ThreadPoolExecutor() as executor:
         df_filtrado['resultado_geocodificacao'] = list(executor.map(geocode_address, df_filtrado['endereco_editado']))
@@ -38,4 +44,4 @@ def geocode_addresses(caminho_arquivo, cnaes_desejados, num_linhas=None):
 
 caminho_arquivo = "/home/fribeiro/bases/Teste_02.csv"
 cnaes_desejados = [ '4110700', '6435201', '6470101', '6470103', '6810201', '6810202', '6810203', '6821801', '6821802', '6822600', '7490104']  
-geocode_addresses(caminho_arquivo, cnaes_desejados, num_linhas=None)
+geocode_addresses(caminho_arquivo, cnaes_desejados, num_linhas=100)
