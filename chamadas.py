@@ -8,7 +8,7 @@ async def fetch(data, session):
     campos = data.split('|')
     cnpj = campos[0]
     url = requote_uri(campos[1])
-    url='http://venus.iocasta.com.br:8080/search.php?q=rua%20livorno%20-%20bandeirantes%20-%20Belo%20Horizonte'
+    #url='http://venus.iocasta.com.br:8080/search.php?q=rua%20livorno%20-%20bandeirantes%20-%20Belo%20Horizonte'
     async with session.get(url) as response:
         delay = response.headers.get("DELAY")
         date = response.headers.get("DATE")

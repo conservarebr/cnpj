@@ -29,13 +29,13 @@ def geocode_addresses(caminho_arquivo, cnaes_desejados, num_linhas=None):
         df_filtrado = df_filtrado.head(num_linhas)
     
     with ThreadPoolExecutor() as executor:
-    df_filtrado['resultado_geocodificacao'] = list(executor.map(geocode_address, df_filtrado['endereco_editado']))
-    df_filtrado['resultado_geocodificacao'] = df_filtrado['resultado_geocodificacao'].apply(lambda x: json.dumps(x, ensure_ascii=False) if x else None)
+        df_filtrado['resultado_geocodificacao'] = list(executor.map(geocode_address, df_filtrado['endereco_editado']))
+        df_filtrado['resultado_geocodificacao'] = df_filtrado['resultado_geocodificacao'].apply(lambda x: json.dumps(x, ensure_ascii=False) if x else None)
     
     output_file = os.path.join(os.path.dirname(caminho_arquivo), 'Teste_geocodificado_02.csv')
     df_filtrado.to_csv(output_file, sep=';', index=False, encoding='utf-8')
     logging.info(f"O arquivo geocodificado foi salvo em {output_file}")
 
 caminho_arquivo = "/home/fribeiro/bases/Teste_02.csv"
-cnaes_desejados = ['3211602', '4543900']  
-geocode_addresses(caminho_arquivo, cnaes_desejados, num_linhas=10)
+cnaes_desejados = [ '4110700', '6435201', '6470101', '6470103', '6810201', '6810202', '6810203', '6821801', '6821802', '6822600', '7490104']  
+geocode_addresses(caminho_arquivo, cnaes_desejados, num_linhas=None)
