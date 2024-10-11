@@ -51,7 +51,7 @@ FROM read_csv_auto(
 ) AS e
 JOIN municipios m ON e.column20 = m.codigo
 CROSS JOIN UNNEST(string_split(e.column12, ',')) AS cnae_secundaria(value)
-WHERE e.column05 = '02';  -- Removido o filtro de cnae_filtro
+WHERE e.column05 = '02';  -- Removido o filtro de cnae_filtro 
 """)
 
 #### Salvando em csv ####
