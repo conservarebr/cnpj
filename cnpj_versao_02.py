@@ -4,14 +4,6 @@ import os
 data_fribeiro = "/home/fribeiro/bases"
 conn = duckdb.connect(database=':memory:')
 
-#### Filtro de CNAEs ####
-cnae_filtro = [
-    '4110700', '6435201', '6470101', '6470103', 
-    '6810201', '6810202', '6810203', '6821801', 
-    '6821802', '6822600', '7490104'
-]
-cnae_filtro_str = "', '".join(cnae_filtro)
-
 #### CNAE ####
 conn.execute("""CREATE TABLE cnae (
     codigo VARCHAR PRIMARY KEY,
