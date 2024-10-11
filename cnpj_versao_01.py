@@ -34,7 +34,7 @@ COPY municipios FROM '{municipios_file_path}'
     (FORMAT CSV, DELIMITER ';', HEADER TRUE, QUOTE '"', ESCAPE '"', ENCODING 'UTF8', IGNORE_ERRORS TRUE);
 """)
 
-#### Estabelecimentos 01 - Sem CNAES ####
+#### Estabelecimentos Sem CNAES ####
 estabelecimentos_files = [os.path.join(data_fribeiro, f'estabelecimentos_{i}.csv') for i in range(10)]
 estabelecimentos_files_str = ', '.join([f"'{file}'" for file in estabelecimentos_files])
 

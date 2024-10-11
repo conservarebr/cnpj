@@ -34,7 +34,7 @@ COPY municipios FROM '{municipios_file_path}'
     (FORMAT CSV, DELIMITER ';', HEADER TRUE, QUOTE '"', ESCAPE '"', ENCODING 'UTF8', IGNORE_ERRORS TRUE);
 """)
 
-#### Estabelecimentos 02 - Com CNAES ####
+#### Estabelecimentos Com CNAES ####
 conn.execute(f"""
 CREATE TABLE csv_02 AS
 SELECT DISTINCT
