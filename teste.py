@@ -14,12 +14,6 @@ conn.execute("""CREATE TABLE ibge (
 
 # Listando os arquivos CSV no diretório
 ibge_files = [os.path.join(data_ibge, f) for f in os.listdir(data_ibge) if f.endswith('.csv')]
-
-# Garantindo que haja arquivos
-if not ibge_files:
-    raise FileNotFoundError("Nenhum arquivo CSV encontrado no diretório.")
-
-# Convertendo a lista de arquivos em uma string para a consulta
 ibge_files_str = ', '.join([f"'{file}'" for file in ibge_files])
 
 # Inserindo dados na tabela ibge
