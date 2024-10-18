@@ -29,7 +29,7 @@ def geocode_addresses(caminho_arquivo, cnaes_desejados, num_linhas=10):
     
     for column in ['endereco_editado', 'cep']:
         logging.info(f"Iniciando a verificação por {column}")
-        with ThreadPoolExecutor(max_workers=10) as executor:
+        with ThreadPoolExecutor() as executor:
             df_filtrado[f'resultado_geocodificacao_{column}'] = list(executor.map(geocode_address, df_filtrado[column]))
         logging.info(f"Concluída verificação por {column}")
 
