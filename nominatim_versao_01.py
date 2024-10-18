@@ -24,7 +24,7 @@ def geocode_addresses(caminho_arquivo, num_linhas=None):
         df['resultado_geocodificacao'] = list(executor.map(geocode_address, df['cep']))
     df['resultado_geocodificacao'] = df['resultado_geocodificacao'].apply(lambda x: json.dumps(x, ensure_ascii=False) if x else None)
     
-    output_file = os.path.join(os.path.dirname(caminho_arquivo), 'CNPJ Resultado.csv')
+    output_file = os.path.join(os.path.dirname(caminho_arquivo), 'CNPJ_Resultado.csv')
     df.to_csv(output_file, sep=';', index=False, encoding='utf-8')
     logging.info(f"O arquivo geocodificado foi salvo em {output_file}")
     
