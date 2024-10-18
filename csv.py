@@ -58,12 +58,12 @@ WHERE e.column05 = '02';  -- Removido o filtro de cnae_filtro
 """)
 
 #### Salvando em csv ####
-saida_02 = os.path.join(data_fribeiro, 'CNPJ.csv')
+saida = os.path.join(data_fribeiro, 'CNPJ.csv')
 conn.execute(f"""
-COPY CNPJ TO '{saida_02}' 
+COPY CNPJ TO '{saida}' 
     (FORMAT CSV, DELIMITER ';', HEADER TRUE, ENCODING 'UTF8');
 """)
 
-print(f"A tabela 'CNPJ' foi salva em {saida_02}")
+print(f"A tabela 'CNPJ' foi salva em {saida}")
 
 conn.close()
