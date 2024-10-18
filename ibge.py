@@ -27,7 +27,7 @@ SELECT DISTINCT
 FROM read_csv_auto(
     [{ibge_files_str}],
     sep = ';',
-    header = false,
+    header = true,
     ignore_errors = true,
     union_by_name = true,
     filename = true
