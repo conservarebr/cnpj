@@ -27,8 +27,11 @@ COPY municipios FROM '{municipios_file_path}'
 """)
 
 #### Estabelecimentos Com CNAES ####
+estabelecimentos_files = [os.path.join(data_fribeiro, f'estabelecimentos_{i}.csv') for i in range(10)]
+estabelecimentos_files_str = ', '.join([f"'{file}'" for file in estabelecimentos_files])
+
 conn.execute(f"""
-CREATE TABLE csv_02 AS
+CREATE TABLE CNPJ AS
 SELECT DISTINCT
     CONCAT(e.column00, e.column01, e.column02) AS cnpj_completo,
     CONCAT(e.column13, ' ', e.column14, ' ', e.column15, ' ', e.column17, ' ', m.descricao, ' ', e.column19, ' ', e.column18) AS endereco,
@@ -55,12 +58,12 @@ WHERE e.column05 = '02';  -- Removido o filtro de cnae_filtro
 """)
 
 #### Salvando em csv ####
-saida_02 = os.path.join(data_fribeiro, 'Teste_02.csv')
+saida_02 = os.path.join(data_fribeiro, 'CNPJ.csv')
 conn.execute(f"""
-COPY csv_02 TO '{saida_02}' 
+COPY CNPJ TO '{saida_02}' 
     (FORMAT CSV, DELIMITER ';', HEADER TRUE, ENCODING 'UTF8');
 """)
 
-print(f"A tabela 'csv_02' foi salva em {saida_02}")
+print(f"A tabela 'CNPJ' foi salva em {saida_02}")
 
 conn.close()

@@ -35,11 +35,11 @@ def geocode_addresses(caminho_arquivo, cnaes_desejados, num_linhas=None):
 
     df_filtrado[[f'resultado_geocodificacao_{col}' for col in ['endereco_editado', 'cep']]] = df_filtrado[[f'resultado_geocodificacao_{col}' for col in ['endereco_editado', 'cep']]].apply(lambda x: x.apply(lambda y: json.dumps(y, ensure_ascii=False) if y else None))
 
-    output_file = os.path.join(os.path.dirname(caminho_arquivo), 'Teste_geocodificado_04.csv')
+    output_file = os.path.join(os.path.dirname(caminho_arquivo), 'CNPJ Resultado.csv')
     df_filtrado.to_csv(output_file, sep=';', index=False, encoding='utf-8')
     logging.info(f"Arquivo geocodificado salvo em {output_file}")
 
-caminho_arquivo = "/home/fribeiro/bases/Teste_02.csv"
+caminho_arquivo = "/home/fribeiro/bases/CNPJ.csv"
 cnaes_desejados = ['4110700', '6435201', '6470101', '6470103', '6810201', '6810202', '6810203', '6821801', '6821802', '6822600', '7490104']
 geocode_addresses(caminho_arquivo, cnaes_desejados)
 

@@ -39,7 +39,7 @@ estabelecimentos_files = [os.path.join(data_fribeiro, f'estabelecimentos_{i}.csv
 estabelecimentos_files_str = ', '.join([f"'{file}'" for file in estabelecimentos_files])
 
 conn.execute(f"""
-CREATE TABLE csv AS
+CREATE TABLE CNPJ AS
 SELECT DISTINCT
     CONCAT(e.column00, e.column01, e.column02) AS cnpj_completo,
     CONCAT(e.column13, ' ', e.column14, ' ', e.column15, ' ', e.column17, ' ', m.descricao, ' ', e.column19, ' ', e.column18) AS endereco,
@@ -67,12 +67,12 @@ WHERE e.column05 = '02' AND (
 """)
 
 #### Salvando em csv ####
-saida = os.path.join(data_fribeiro, 'Teste.csv')
+saida = os.path.join(data_fribeiro, 'CNPJ.csv')
 conn.execute(f"""
-COPY csv TO '{saida}' 
+COPY CNPJ TO '{saida}' 
     (FORMAT CSV, DELIMITER ';', HEADER TRUE, ENCODING 'UTF8');
 """)
 
-print(f"A tabela 'csv' foi salva em {saida}")
+print(f"A tabela 'CNPJ' foi salva em {saida}")
 
 conn.close()
