@@ -20,10 +20,10 @@ ibge_files_str = ', '.join([f"'{file}'" for file in ibge_files])
 conn.execute(f"""
 INSERT INTO ibge
 SELECT DISTINCT
-    e.column01 AS uf,
-    e.column08 AS cep,
-    e.column25 AS latitude,
-    e.column26 AS longitude
+    e.UF,
+    e.CEP,
+    e.LATITUDE,
+    e.LONGITUDE
 FROM read_csv_auto(
     [{ibge_files_str}],
     sep = ';',
@@ -32,7 +32,7 @@ FROM read_csv_auto(
     union_by_name = true,
     filename = true
 ) AS e
-WHERE e.column01 IS NOT NULL AND e.column08 IS NOT NULL;  -- Filtro para garantir que UF e CEP não sejam nulos
+WHERE e.UF IS NOT NULL AND e.CEP IS NOT NULL;  -- Filtro para garantir que UF e CEP não sejam nulos
 """)
 
 #### Salvando em csv ####
