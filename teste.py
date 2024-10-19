@@ -16,7 +16,7 @@ COPY cnae FROM '{cnae_file_path}'
     (FORMAT CSV, DELIMITER ';', HEADER TRUE, QUOTE '"', ESCAPE '"', ENCODING 'UTF8', IGNORE_ERRORS TRUE);
 """)
 
-#### Municipios ####
+#### Municípios ####
 conn.execute("""CREATE TABLE municipios (
     codigo VARCHAR PRIMARY KEY,
     descricao VARCHAR
@@ -34,27 +34,12 @@ conn.execute("""CREATE TABLE ibge (
     latitude VARCHAR,
     longitude VARCHAR
 );""")
-
 ibge_files = [os.path.join(data_ibge, f) for f in os.listdir(data_ibge) if f.endswith('.csv')]
-ibge_files_str = ', '.join([f"'{file}'" for file in ibge_files])
-
-conn.execute(f"""
-INSERT INTO ibge
-SELECT DISTINCT
-    e.UF,
-    e.CEP,
-    e.LATITUDE,
-    e.LONGITUDE
-FROM read_csv_auto(
-    [{ibge_files_str}],
-    sep = ';',
-    header = true,
-    ignore_errors = true,
-    union_by_name = true,
-    filename = true
-) AS e
-WHERE e.UF IS NOT NULL AND e.CEP IS NOT NULL;  -- Filtro para garantir que UF e CEP não sejam nulos
-""")
+for ibge_file in ibge_files:
+    conn.execute(f"""
+    COPY ibge FROM '{ibge_file}' 
+        (FORMAT CSV, DELIMITER ';', HEADER TRUE, QUOTE '"', ESCAPE '"', ENCODING 'UTF8', IGNORE_ERRORS TRUE);
+    """)
 
 conn.execute("""CREATE TABLE ibge_avg AS
 SELECT
@@ -103,7 +88,7 @@ CROSS JOIN UNNEST(string_split(e.column12, ',')) AS cnae_secundaria(value)
 WHERE e.column05 = '02';  -- Removido o filtro de cnae_filtro 
 """)
 
-#### Salvando em csv ####
+#### Salvando em CSV ####
 saida = os.path.join(data_fribeiro, 'CNPJ.csv')
 conn.execute(f"""
 COPY CNPJ TO '{saida}' 
@@ -113,5 +98,6 @@ COPY CNPJ TO '{saida}'
 print(f"A tabela 'CNPJ' foi salva em {saida}")
 
 conn.close()
+
 
 # scp fribeiro@209.126.127.15:/home/fribeiro/bases/CNPJ/CNPJ.csv C:/Users/RibeiroF/Downloads/
