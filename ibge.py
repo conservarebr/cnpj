@@ -5,6 +5,7 @@ data_ibge = "/home/fribeiro/bases/IBGE_CNEFE"
 conn = duckdb.connect(database=':memory:')
 
 #### IBGE ####
+# Criação da tabela ibge
 conn.execute("""CREATE TABLE ibge (
     uf VARCHAR,
     cep VARCHAR,
@@ -35,19 +36,29 @@ FROM read_csv_auto(
 WHERE e.UF IS NOT NULL AND e.CEP IS NOT NULL;  -- Filtro para garantir que UF e CEP não sejam nulos
 """)
 
-#### Salvando em csv ####
-saida_ibge = os.path.join(data_ibge, 'IBGE.csv')
+# Criando uma nova tabela para armazenar as médias das coordenadas por CEP e UF
+conn.execute("""CREATE TABLE ibge_avg AS
+SELECT
+    UF,
+    CEP,
+    ROUND(AVG(CAST(LATITUDE AS FLOAT)), 6) AS avg_latitude,
+    ROUND(AVG(CAST(LONGITUDE AS FLOAT)), 6) AS avg_longitude
+FROM
+    ibge
+WHERE
+    CEP IS NOT NULL
+GROUP BY
+    UF, CEP;""")
+
+# Salvando a tabela com as médias em um novo arquivo CSV
+saida_ibge_avg = os.path.join(data_ibge, 'IBGE_avg.csv')
 conn.execute(f"""
-COPY ibge TO '{saida_ibge}' 
+COPY ibge_avg TO '{saida_ibge_avg}' 
     (FORMAT CSV, DELIMITER ';', HEADER TRUE, ENCODING 'UTF8');
 """)
 
-print(f"A tabela 'ibge' foi salva em {saida_ibge}")
+print(f"A tabela com a média das coordenadas por CEP e UF foi salva em {saida_ibge_avg}")
 
 conn.close()
 
-
-media_coordenadas = df.groupby('CEP').agg({
-    'LATITUDE': 'mean',
-    'LONGITUDE': 'mean'
-}).reset_index()
+# scp fribeiro@209.126.127.15:/home/fribeiro/bases/IBGE_CNEFE/IBGE_avg.csv C:/Users/RibeiroF/Downloads/
