@@ -43,4 +43,4 @@ caminho_arquivo = "/home/fribeiro/bases/CNPJ/CNPJ.csv"
 cnaes_desejados = ['4110700', '6435201', '6470101', '6470103', '6810201', '6810202', '6810203', '6821801', '6821802', '6822600', '7490104']
 geocode_addresses(caminho_arquivo, cnaes_desejados)
 
-# scp fribeiro@209.126.127.15:/home/fribeiro/bases/CNPJ Resultado.csv C:/Users/RibeiroF/Downloads/
+# scp fribeiro@209.126.127.15:/home/fribeiro/bases/CNPJ/CNPJ Resultado.csv C:/Users/RibeiroF/Downloads/
