@@ -5,7 +5,6 @@ data_ibge = "/home/fribeiro/bases/IBGE_CNEFE"
 conn = duckdb.connect(database=':memory:')
 
 #### IBGE ####
-# Criação da tabela ibge
 conn.execute("""CREATE TABLE ibge (
     uf VARCHAR,
     cep VARCHAR,
