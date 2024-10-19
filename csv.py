@@ -1,7 +1,7 @@
 import duckdb
 import os
 
-data_fribeiro = "/home/fribeiro/bases"
+data_fribeiro = "/home/fribeiro/bases/CNPJ"
 conn = duckdb.connect(database=':memory:')
 
 #### CNAE ####
