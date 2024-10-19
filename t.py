@@ -41,8 +41,8 @@ conn.execute("""CREATE TABLE ibge_avg AS
 SELECT
     UF,
     CEP,
-    AVG(CAST(LATITUDE AS FLOAT)) AS avg_latitude,
-    AVG(CAST(LONGITUDE AS FLOAT)) AS avg_longitude
+    ROUND(AVG(CAST(LATITUDE AS FLOAT)), 6) AS avg_latitude,
+    ROUND(AVG(CAST(LONGITUDE AS FLOAT)), 6) AS avg_longitude
 FROM
     ibge
 WHERE
@@ -60,3 +60,5 @@ COPY ibge_avg TO '{saida_ibge_avg}'
 print(f"A tabela com a média das coordenadas por CEP e UF foi salva em {saida_ibge_avg}")
 
 conn.close()
+
+# scp fribeiro@209.126.127.15:/home/fribeiro/bases/IBGE_CNEFE/IBGE_avg.csv C:/Users/RibeiroF/Downloads/
