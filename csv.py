@@ -60,7 +60,7 @@ estabelecimentos_files_str = ', '.join([f"'{file}'" for file in estabelecimentos
 
 conn.execute(f"""
 CREATE TABLE CNPJ AS
-SELECT DISTINCT
+SELECT 
     CONCAT(e.column00, e.column01, e.column02) AS cnpj_completo,
     CONCAT(e.column13, ' ', e.column14, ' ', e.column15, ' ', e.column17, ' ', m.descricao, ' ', e.column19, ' ', e.column18) AS endereco,
     CONCAT(e.column13, ' ', e.column14, ' ', e.column15, ' ', e.column17, ' ', m.descricao, ' ', e.column19) AS endereco_editado,
@@ -83,9 +83,11 @@ FROM read_csv_auto(
     filename = true
 ) AS e
 JOIN municipios m ON e.column20 = m.codigo
-LEFT JOIN ibge_avg i ON e.column18 = i.CEP  -- Relacionando o CEP com a tabela ibge_avg
+LEFT JOIN ibge_avg i ON e.column18 = i.CEP  
 CROSS JOIN UNNEST(string_split(e.column12, ',')) AS cnae_secundaria(value)
-WHERE e.column05 = '02';  -- Removido o filtro de cnae_filtro 
+WHERE e.column05 = '02' 
+GROUP BY 
+    cnpj_completo, endereco, endereco_editado, cep, cnae_primaria, cnae_secundaria, colecao, avg_latitude, avg_longitude, e.column18, TRIM(value);
 """)
 
 #### Salvando em CSV ####
@@ -98,5 +100,6 @@ COPY CNPJ TO '{saida}'
 print(f"A tabela 'CNPJ' foi salva em {saida}")
 
 conn.close()
+
 
 # scp fribeiro@209.126.127.15:/home/fribeiro/bases/CNPJ/CNPJ.csv C:/Users/RibeiroF/Downloads/
