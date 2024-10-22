@@ -1,87 +1,46 @@
-import duckdb
 import os
+import pandas as pd
+import requests
+import json
 import logging
-from datetime import datetime
+from concurrent.futures import ThreadPoolExecutor
 
-# Configurando o logging para exibir no terminal
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(levelname)s - %(message)s'
-)
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
-data_fribeiro = "/home/fribeiro/bases/CNPJ"
-conn = duckdb.connect(database=':memory:')
+def geocode_address(endereco):
+    try:
+        response = requests.get(f"http://venus.iocasta.com.br:8080/search.php?q={endereco}")
+        response.raise_for_status()
+        return response.json()[0] if response.json() else None
+    except Exception as e:
+        logging.error(f"Erro ao geocodificar o endereço: {endereco}. Erro: {e}")
+        return None 
 
-# Registro de início do processamento
-logging.info("Início do processamento")
+def cnae_filtro(df, cnaes):
+    return df[df['cnae_primaria'].isin(cnaes) | df['cnae_secundaria'].isin(cnaes)]
 
-try:
-    #### CNAE ####
-    conn.execute("""CREATE TABLE cnae (
-        codigo VARCHAR PRIMARY KEY,
-        descricao VARCHAR
-    );""")
-    cnae_file_path = os.path.join(data_fribeiro, 'cnae.csv')
-    conn.execute(f"""
-    COPY cnae FROM '{cnae_file_path}' 
-        (FORMAT CSV, DELIMITER ';', HEADER TRUE, QUOTE '"', ESCAPE '"', ENCODING 'UTF8', IGNORE_ERRORS TRUE);
-    """)
+def geocode_addresses(caminho_arquivo, cnaes_desejados, num_linhas=10):
+    logging.info(f"Iniciando a geocodificação a partir do arquivo: {caminho_arquivo}")
+    df = pd.read_csv(caminho_arquivo, sep=';', encoding='utf-8', dtype=str)
+    df_filtrado = cnae_filtro(df, cnaes_desejados).drop(columns=['cnae_primaria', 'cnae_secundaria'], errors='ignore').drop_duplicates()
+    if num_linhas: df_filtrado = df_filtrado.head(num_linhas)
 
-    #### Municípios ####
-    conn.execute("""CREATE TABLE municipios (
-        codigo VARCHAR PRIMARY KEY,
-        descricao VARCHAR
-    );""")
-    municipios_file_path = os.path.join(data_fribeiro, 'municipios.csv')
-    conn.execute(f"""
-    COPY municipios FROM '{municipios_file_path}' 
-        (FORMAT CSV, DELIMITER ';', HEADER TRUE, QUOTE '"', ESCAPE '"', ENCODING 'UTF8', IGNORE_ERRORS TRUE);
-    """)
+    logging.info(f"Número de registros restantes: {df_filtrado.shape[0]}")
+    
+    for column in ['endereco_editado', 'cep']:
+        logging.info(f"Iniciando a verificação por {column}")
+        with ThreadPoolExecutor() as executor:
+            df_filtrado[f'resultado_geocodificacao_{column}'] = list(executor.map(geocode_address, df_filtrado[column]))
+        logging.info(f"Concluída verificação por {column}")
 
-    #### Estabelecimentos ####
-    estabelecimentos_files = [os.path.join(data_fribeiro, f'estabelecimentos_{i}.csv') for i in range(10)]
-    estabelecimentos_files_str = ', '.join([f"'{file}'" for file in estabelecimentos_files])
+    df_filtrado[[f'resultado_geocodificacao_{col}' for col in ['endereco_editado', 'cep']]] = df_filtrado[[f'resultado_geocodificacao_{col}' for col in ['endereco_editado', 'cep']]].apply(lambda x: x.apply(lambda y: json.dumps(y, ensure_ascii=False) if y else None))
 
-    conn.execute(f"""
-    CREATE TABLE CNPJ AS
-    SELECT DISTINCT
-        CONCAT(e.column00, e.column01, e.column02) AS cnpj_completo,
-        CONCAT(e.column13, ' ', e.column14, ' ', e.column15, ' ', e.column17, ' ', m.descricao, ' ', e.column19, ' ', e.column18) AS endereco,
-        CONCAT(e.column13, ' ', e.column14, ' ', e.column15, ' ', e.column17, ' ', m.descricao, ' ', e.column19) AS endereco_editado,
-        e.column18 AS cep,
-        e.column11 AS cnae_primaria,
-        TRIM(value) AS cnae_secundaria,
-        CONCAT(
-            CONCAT(e.column00, e.column01, e.column02),
-            '|http://venus.iocasta.com.br:8080/search.php?q=',
-            TRIM(CONCAT(e.column13, ' ', e.column14, ' ', e.column15, ' ', e.column17, ' ', m.descricao, ' ', e.column19))
-        ) AS colecao
-    FROM read_csv_auto(
-        [{estabelecimentos_files_str}],
-        sep = ';',
-        header = false,
-        ignore_errors = true,
-        union_by_name = true,
-        filename = true
-    ) AS e
-    JOIN municipios m ON e.column20 = m.codigo
-    CROSS JOIN UNNEST(string_split(e.column12, ',')) AS cnae_secundaria(value)
-    WHERE e.column05 = '02';
-    """)
+    output_file = os.path.join(os.path.dirname(caminho_arquivo), 'CNPJ_Resultado.csv')
+    df_filtrado.to_csv(output_file, sep=';', index=False, encoding='utf-8')
+    logging.info(f"Arquivo geocodificado salvo em {output_file}")
 
-    #### Salvando em CSV ####
-    saida = os.path.join(data_fribeiro, 'CNPJ.csv')
-    conn.execute(f"""
-    COPY CNPJ TO '{saida}' 
-        (FORMAT CSV, DELIMITER ';', HEADER TRUE, ENCODING 'UTF8');
-    """)
+caminho_arquivo = "/home/fribeiro/bases/CNPJ/CNPJ.csv"
+cnaes_desejados = ['4110700', '6435201', '6470101', '6470103', '6810201', '6810202', '6810203', '6821801', '6821802', '6822600', '7490104']
+geocode_addresses(caminho_arquivo, cnaes_desejados)
 
-    logging.info(f"A tabela 'CNPJ' foi salva em {saida}")
-
-except Exception as e:
-    logging.error(f"Ocorreu um erro: {e}")
-finally:
-    conn.close()
-
-# Registro de fim do processamento
-logging.info("Fim do processamento")
+# scp fribeiro@209.126.127.15:/home/fribeiro/bases/CNPJ/CNPJ_Resultado.csv C:/Users/RibeiroF/Downloads/
