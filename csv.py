@@ -81,6 +81,7 @@ try:
 except Exception as e:
     logging.error(f"Ocorreu um erro: {e}")
 finally:
+    
     conn.close()
 
 # Registro de fim do processamento
