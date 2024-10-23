@@ -7,6 +7,11 @@ URL:  https://batch.openaddresses.io/data#map=0/0/0
 - Criar banco de dados DuckDb: /mnt/disk1/data/openaddress/openaddress.db
 - Quando conectar fornecer o banco de dados "openaddress"
 
+
+- Estou pensando em não passar o nome da cidade, somente CEP e nome da rua.
+- Nome da rua tem que ser em maiúscula e sem acento
+- CEP tem que ser no formato 30340-620
+
 ```py
 INSTALL spatial;
 LOAD spatial;
