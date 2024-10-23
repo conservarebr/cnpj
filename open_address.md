@@ -38,8 +38,10 @@ for uf in ufs list[str] = split(brasil,","):
 	sql =  f"create table {uf} as "\
 			"select * " \
 			"from st_read('s3://geoserver/br/{uf}/statewide-addresses-state.geojson');"
+	execute(sql)
 	for cpo in campos_desnecessarios:
-		ALTER TABLE {tbl_name} DROP COLUMN cpo;
+		sql = f"ALTER TABLE {tbl_name} DROP COLUMN cpo;"
+		execute(sql)
 
 
 arquivos = ["br/es/vitoria-addresses-city.geojson",
@@ -59,8 +61,10 @@ for arquivo in ufs list[str] = arquivos:
 	sql =  f"create table {tbl_name} as "\
 			"select * " \
 			"from st_read('s3://geoserver/{arquivo}');"
+	execute(sql)
 	for cpo in campos_desnecessarios:
-		ALTER TABLE {tbl_name} DROP COLUMN cpo;
+		sql = f"ALTER TABLE {tbl_name} DROP COLUMN cpo;"
+		execute(sql)
 
 
 
