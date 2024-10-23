@@ -3,14 +3,17 @@
 
 URL:  https://batch.openaddresses.io/data#map=0/0/0
 
+Instruções:
 - Diretório no MinIo: s3://geoserver/br/
 - Criar banco de dados DuckDb: /mnt/disk1/data/openaddress/openaddress.db
 - Quando conectar fornecer o banco de dados "openaddress"
+- Nome da rua tem que ser em maiúscula e sem acento;
+- CEP tem que ser no formato 30340-620;
 
 
-- Estou pensando em não passar o nome da cidade, somente CEP e nome da rua.
-- Nome da rua tem que ser em maiúscula e sem acento
-- CEP tem que ser no formato 30340-620
+Obs:
+- Estou pensando em não passar o nome da cidade, somente CEP e nome da rua;
+- Se ficar mais rápido podemos copiar do S3 e colocar os arquivos em um diretório;
 
 ```py
 INSTALL spatial;
