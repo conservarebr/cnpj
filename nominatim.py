@@ -19,7 +19,7 @@ def geocode_address(endereco):
 def cnae_filtro(df, cnaes):
     return df[df['cnae_primaria'].isin(cnaes) | df['cnae_secundaria'].isin(cnaes)]
 
-def geocode_addresses(caminho_arquivo, cnaes_desejados, num_linhas=10):
+def geocode_addresses(caminho_arquivo, cnaes_desejados, num_linhas= None):
     logging.info(f"Iniciando a geocodificação a partir do arquivo: {caminho_arquivo}")
     df = pd.read_csv(caminho_arquivo, sep=';', encoding='utf-8', dtype=str)
     df_filtrado = cnae_filtro(df, cnaes_desejados).drop(columns=['cnae_primaria', 'cnae_secundaria'], errors='ignore').drop_duplicates()
