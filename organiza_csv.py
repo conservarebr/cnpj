@@ -87,4 +87,26 @@ finally:
 # Registro de fim do processamento
 logging.info("Fim do processamento")
 
+[{
+	"resource": "/home/fribeiro/src/cnpj/csv.py",
+	"owner": "python",
+	"code": {
+		"value": "reportShadowedImports",
+		"target": {
+			"$mid": 1,
+			"path": "/microsoft/pyright/blob/main/docs/configuration.md",
+			"scheme": "https",
+			"authority": "github.com",
+			"fragment": "reportShadowedImports"
+		}
+	},
+	"severity": 4,
+	"message": "\"/home/fribeiro/src/cnpj/csv.py\" is overriding the stdlib module \"csv\"",
+	"source": "Pylance",
+	"startLineNumber": 1,
+	"startColumn": 1,
+	"endLineNumber": 90,
+	"endColumn": 94
+}]
+
 # scp fribeiro@209.126.127.15:/home/fribeiro/bases/CNPJ/CNPJ.csv C:/Users/RibeiroF/Downloads/
