@@ -22,18 +22,18 @@ class Estabelecimentos:
             estabelecimentos_files_str = ', '.join([f"'{file}'" for file in estabelecimentos_files])
 
             conn.execute(f"""
-                CREATE TABLE CNPJ AS
+                CREATE TABLE estabelecimentos AS
                 SELECT DISTINCT
                     CONCAT(column00, column01, column02) AS cnpj_completo,
-                    column13 AS tipo_logradouro
+                    column13 AS tipo_logradouro,
                     column14 AS logradouro,
-                    column15 AS numero
-                    column17 AS bairro
+                    column15 AS numero,
+                    column17 AS bairro,
                     column18 AS cep,
-                    column19 AS uf
-                    column20 AS muncipio,
+                    column19 AS uf,
+                    column20 AS municipio,
                     column11 AS cnae_primaria,
-                    TRIM(value) AS cnae_secundaria
+                    TRIM(value.value) AS cnae_secundaria
                 FROM read_csv_auto(
                     [{estabelecimentos_files_str}],
                     sep = ';',
@@ -41,19 +41,10 @@ class Estabelecimentos:
                     ignore_errors = true,
                     union_by_name = true,
                     filename = true
-                ) AS
-                CROSS JOIN UNNEST(string_split(column12, ',')) AS cnae_secundaria(value)
-                WHERE column05 = '02';
+                ) AS t
+                CROSS JOIN UNNEST(string_split(t.column12, ',')) AS value(value)
+                WHERE t.column05 = '02';
             """)
-
-            saida = os.path.join(settings.path_file_csv, 'sss.csv')
-
-            conn.execute(f"""
-                COPY CNPJ TO '{saida}' 
-                (FORMAT CSV, DELIMITER ';', HEADER TRUE, ENCODING 'UTF8');
-            """)
-
-            logging.info(f"A tabela 'Estabelecimentos' foi salva em {saida}")
 
         except Exception as e:
             logging.error(f"Ocorreu um erro: {e}")
