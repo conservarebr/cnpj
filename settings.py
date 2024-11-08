@@ -14,3 +14,6 @@ class Settings(BaseModel):
     geocode_url: str
     geocode_timeout:int
     num_linhas_max: int
+    brasil: str
+    campos_desnecessarios: list[str]
+    arquivos: list[str]

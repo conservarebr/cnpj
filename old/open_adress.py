@@ -1,13 +1,14 @@
 import duckdb
 import os
 import logging
+from logging_config import setup_logging
 
 # Configuração do logging
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
-logger = logging.getLogger()
+setup_logging()  
+logger = logging.getLogger() 
 
 # Caminho do banco de dados
-db_path = '/mnt/disk1/data/openaddress/openaddress.db'
+db_path = '/home/fribeiro/bases/CNPJ/openaddress.db'
 
 # Criar o diretório se não existir
 os.makedirs(os.path.dirname(db_path), exist_ok=True)
