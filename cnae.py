@@ -7,7 +7,7 @@ from logging_config import setup_logging
 
 setup_logging()
 
-conn = duckdb.connect(database=':memory:')
+conn = duckdb.connect(database='cnpj.duckdb')
 
 class Cnae:
 
