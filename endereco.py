@@ -1,20 +1,21 @@
 import duckdb
 import logging
+import os
 from config import load_settings
 from logging_config import setup_logging
 
 setup_logging()
 
 conn = duckdb.connect(database='cnpj.duckdb')
-
 class Endereco:
     
     async def processa_endereco():
+        
+        settings = await load_settings()
 
         logging.info("Início do processamento de endereço")
         
         try:
-
             conn.execute("""
                 CREATE TABLE endereco AS
                 SELECT DISTINCT
@@ -45,9 +46,17 @@ class Endereco:
             conn.execute("ALTER TABLE endereco DROP COLUMN municipio_nome;")
             conn.execute("ALTER TABLE endereco DROP COLUMN municipio_codigo;")
             conn.execute("ALTER TABLE endereco DROP COLUMN uf;")
+            
+            saida = os.path.join(settings.path_file_csv, 'endereco.csv')
+            conn.execute(f"""
+                COPY endereco TO '{saida}' 
+                (FORMAT CSV, DELIMITER ';', HEADER TRUE, ENCODING 'UTF8');
+            """)
+            
+            logging.info(f"A tabela 'endereço' foi salva em {saida}")
 
         except Exception as e:
-            logging.error(f"Ocorreu um erro ao processar os endereço: {e}")
+            logging.error(f"Ocorreu um erro ao processar o endereço: {e}")
         
         finally:
             conn.close()
