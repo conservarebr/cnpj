@@ -164,3 +164,6 @@ cython_debug/
 
 # Ignorar arquivos CSV de estabelecimentos
 .csv
+
+# duckdb
+*.duckdb
