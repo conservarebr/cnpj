@@ -28,7 +28,8 @@ class Municipios:
             
             conn.execute(f"""
             COPY municipios FROM '{municipios_file_path}' 
-                (FORMAT CSV, DELIMITER ';', HEADER TRUE, QUOTE '"', ESCAPE '"', ENCODING 'UTF8', IGNORE_ERRORS TRUE);
+                (FORMAT CSV, DELIMITER ';', HEADER TRUE, QUOTE '"', 
+                ESCAPE '"', ENCODING 'UTF8', IGNORE_ERRORS TRUE);
             """)
 
         except Exception as e:
