@@ -24,7 +24,7 @@ class Cnae:
                 descricao VARCHAR
             );""")
             
-            cnae_file_path = os.path.join(settings.path_file_csv, 'cnae.csv')
+            cnae_file_path = os.path.join(settings.path_file_cnpj, 'cnae.csv')
             
             conn.execute(f"""
             COPY cnae FROM '{cnae_file_path}' 

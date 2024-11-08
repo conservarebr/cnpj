@@ -24,7 +24,7 @@ class Municipios:
                 descricao VARCHAR
             );""")
             
-            municipios_file_path = os.path.join(settings.path_file_csv, 'municipios.csv')
+            municipios_file_path = os.path.join(settings.path_file_cnpj, 'municipios.csv')
             
             conn.execute(f"""
             COPY municipios FROM '{municipios_file_path}' 

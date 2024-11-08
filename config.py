@@ -9,5 +9,6 @@ async def load_settings() -> Settings:
         s3_region='us-west-rack',
         s3_use_ssl=True,
         s3_url_style='path',
-        path_file_csv=r"/home/fribeiro/bases/CNPJ"
+        path_file_cnpj=r"/home/fribeiro/bases/CNPJ",
+        cnae=[]
     )

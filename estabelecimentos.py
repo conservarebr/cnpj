@@ -18,7 +18,7 @@ class Estabelecimentos:
         logging.info("Início do processamento")
 
         try:
-            estabelecimentos_files = [os.path.join(settings.path_file_csv, f'estabelecimentos_{i}.csv') for i in range(10)]
+            estabelecimentos_files = [os.path.join(settings.path_file_cnpj, f'estabelecimentos_{i}.csv') for i in range(10)]
             estabelecimentos_files_str = ', '.join([f"'{file}'" for file in estabelecimentos_files])
 
             conn.execute(f"""

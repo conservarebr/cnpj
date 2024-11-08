@@ -47,7 +47,7 @@ class Endereco:
             conn.execute("ALTER TABLE endereco DROP COLUMN municipio_codigo;")
             conn.execute("ALTER TABLE endereco DROP COLUMN uf;")
             
-            saida = os.path.join(settings.path_file_csv, 'endereco.csv')
+            saida = os.path.join(settings.path_file_cnpj, 'endereco.csv')
             conn.execute(f"""
                 COPY endereco TO '{saida}' 
                 (FORMAT CSV, DELIMITER ';', HEADER TRUE, ENCODING 'UTF8');

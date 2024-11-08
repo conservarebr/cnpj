@@ -8,4 +8,5 @@ class Settings(BaseModel):
     s3_region:str 
     s3_use_ssl:bool
     s3_url_style:str
-    path_file_csv: str 
+    path_file_cnpj: str
+    cnae: list[str]
