@@ -9,4 +9,8 @@ class Settings(BaseModel):
     s3_use_ssl:bool
     s3_url_style:str
     path_file_cnpj: str
+    path_file_endereco:str
     cnae: list[str]
+    geocode_url: str
+    geocode_timeout:int
+    num_linhas_max: int

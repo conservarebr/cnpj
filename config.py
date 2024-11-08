@@ -10,5 +10,9 @@ async def load_settings() -> Settings:
         s3_use_ssl=True,
         s3_url_style='path',
         path_file_cnpj=r"/home/fribeiro/bases/CNPJ",
-        cnae=[]
+        path_file_endereco=r"/home/fribeiro/bases/CNPJ/endereco.csv",
+        cnae=['4110700', '6435201', '6470101', '6470103', '6810201', '6810202', '6810203', '6821801', '6821802', '6822600', '7490104'],
+        geocode_url="http://venus.iocasta.com.br:8080/search.php?q=", 
+        geocode_timeout=10 
+        num_linhas_max= 10
     )
