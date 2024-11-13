@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from typing import Optional
 
 class Settings(BaseModel):
     path_s3:str
@@ -10,10 +11,7 @@ class Settings(BaseModel):
     s3_url_style:str
     path_file_cnpj: str
     path_file_endereco:str
-    cnae: list[str]
-    geocode_url: str
-    geocode_timeout:int
-    num_linhas_max: int
-    brasil: str
-    campos_desnecessarios: list[str]
-    arquivos: list[str]
+    path_db_openadrress:str
+    brasil: Optional[list[str]] = []
+    campos_desnecessarios: Optional[list[str]] = []
+    arquivos: Optional[list[str]] = []
