@@ -8,14 +8,12 @@ from config import load_settings
 setup_logging()  
 logger = logging.getLogger() 
 
-class OpenAdrress:
+class OpenAddress:
     
-    async def processa_openadrress():
+    async def processa_openaddress():
         
         settings = await load_settings()
-
-        db_path = settings.path_db_openadrress
-
+        db_path = settings.path_db_openaddress
         os.makedirs(os.path.dirname(db_path), exist_ok=True)
         
         logger.info("Iniciando o processamento do script.")
@@ -74,4 +72,4 @@ class OpenAdrress:
         logger.info("Processamento do script finalizado.")
         
 if __name__ == '__main__':
-    asyncio.run(OpenAdrress.processa_openadrress())
+    asyncio.run(OpenAddress.processa_openaddress())

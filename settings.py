@@ -11,7 +11,7 @@ class Settings(BaseModel):
     s3_url_style:str
     path_file_cnpj: str
     path_file_endereco:str
-    path_db_openadrress:str
+    path_db_openaddress:str
     brasil: Optional[list[str]] = []
     campos_desnecessarios: Optional[list[str]] = []
     arquivos: Optional[list[str]] = []
