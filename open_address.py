@@ -40,27 +40,35 @@ class OpenAddress:
             for uf in brasil:
                 if uf == "to":
                     uf = '"to"' 
-                sql = f"""
-                CREATE TABLE {uf} AS 
-                SELECT * 
-                FROM st_read('s3://geoserver/br/{uf}/statewide-addresses-state.geojson');
-                """
-                con.execute(sql)
-                for cpo in campos_desnecessarios:
-                    con.execute(f"ALTER TABLE {uf} DROP COLUMN {cpo};")
-                logger.info(f"Tabela criada para a UF: {uf}")
+                try:
+                
+                    con.execute(f"""
+                    CREATE TABLE {uf} AS 
+                    SELECT * 
+                    FROM st_read('s3://geoserver/br/{uf}/statewide-addresses-state.geojson');
+                    """)
+                
+                    for cpo in campos_desnecessarios:
+                        con.execute(f"ALTER TABLE {uf} DROP COLUMN {cpo};")
+                    logger.info(f"Tabela criada para a UF: {uf}")
+                except Exception as e:
+                    logger.error(f"Erro ao carregar arquivo para a UF {uf}: {e}")
             
             for arquivo in settings.arquivos:
                 tbl_name = arquivo[7:].replace("-addresses-city.geojson", "")
-                sql = f"""
-                CREATE TABLE {tbl_name} AS 
-                SELECT * 
-                FROM st_read('s3://geoserver/{arquivo}');
-                """
-                con.execute(sql)
-                for cpo in campos_desnecessarios:
-                    con.execute(f"ALTER TABLE {tbl_name} DROP COLUMN {cpo};")
-                logger.info(f"Tabela criada para a cidade: {tbl_name}")
+                try:
+                
+                    con.execute(f"""
+                    CREATE TABLE {tbl_name} AS 
+                    SELECT * 
+                    FROM st_read('s3://geoserver/{arquivo}');
+                    """)
+                
+                    for cpo in campos_desnecessarios:
+                        con.execute(f"ALTER TABLE {tbl_name} DROP COLUMN {cpo};")
+                    logger.info(f"Tabela criada para a cidade: {tbl_name}")
+                except Exception as e:
+                    logger.error(f"Erro ao carregar arquivo para a cidade {tbl_name}: {e}")
 
         except Exception as e:
             logger.error(f"Ocorreu um erro durante o processamento: {e}")
