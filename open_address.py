@@ -36,7 +36,7 @@ class OpenAddress:
 
             brasil = settings.brasil
             campos_desnecessarios = settings.campos_desnecessarios
-
+            
             for uf in brasil:
                 if uf == "to":
                     uf = '"to"' 
@@ -49,7 +49,7 @@ class OpenAddress:
                 for cpo in campos_desnecessarios:
                     con.execute(f"ALTER TABLE {uf} DROP COLUMN {cpo};")
                 logger.info(f"Tabela criada para a UF: {uf}")
-
+            
             for arquivo in settings.arquivos:
                 tbl_name = arquivo[7:].replace("-addresses-city.geojson", "")
                 sql = f"""
