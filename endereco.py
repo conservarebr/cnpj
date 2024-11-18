@@ -33,6 +33,7 @@ class Endereco:
                     CONCAT(e.tipo_logradouro, ' ', e.logradouro, ' ', e.numero, ' ',
                     e.bairro, ' ', e.municipio, ' ', e.uf) AS endereco_editado,
                     e.cep
+                    REGEXP_REPLACE(e.cep, '(\\d{5})(\\d{3})', '\\1-\\2') AS cep_editado
                 FROM estabelecimentos AS e
                 LEFT JOIN municipios AS m
                     ON e.municipio = m.descricao;

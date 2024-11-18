@@ -11,7 +11,6 @@ logger = logging.getLogger()
 class OpenAddress:
     
     async def processa_openaddress():
-        
         settings = await load_settings()
         db_path = settings.path_db_openaddress
         os.makedirs(os.path.dirname(db_path), exist_ok=True)
@@ -40,8 +39,9 @@ class OpenAddress:
             for uf in brasil:
                 if uf == "to":
                     uf = '"to"' 
+                    
                 try:
-                
+                    
                     con.execute(f"""
                     CREATE TABLE {uf} AS 
                     SELECT * 
@@ -51,13 +51,15 @@ class OpenAddress:
                     for cpo in campos_desnecessarios:
                         con.execute(f"ALTER TABLE {uf} DROP COLUMN {cpo};")
                     logger.info(f"Tabela criada para a UF: {uf}")
+                    
                 except Exception as e:
                     logger.error(f"Erro ao carregar arquivo para a UF {uf}: {e}")
             
             for arquivo in settings.arquivos:
-                tbl_name = arquivo[7:].replace("-addresses-city.geojson", "")
-                try:
+                tbl_name = arquivo[6:].replace("-addresses-city.geojson", "").replace("-", "_")
                 
+                try:
+                    
                     con.execute(f"""
                     CREATE TABLE {tbl_name} AS 
                     SELECT * 
@@ -67,11 +69,13 @@ class OpenAddress:
                     for cpo in campos_desnecessarios:
                         con.execute(f"ALTER TABLE {tbl_name} DROP COLUMN {cpo};")
                     logger.info(f"Tabela criada para a cidade: {tbl_name}")
+                    
                 except Exception as e:
                     logger.error(f"Erro ao carregar arquivo para a cidade {tbl_name}: {e}")
 
         except Exception as e:
             logger.error(f"Ocorreu um erro durante o processamento: {e}")
+            
         finally:
             if 'con' in locals():
                 con.close()

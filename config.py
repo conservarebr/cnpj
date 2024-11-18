@@ -20,10 +20,13 @@ async def load_settings() -> Settings:
         path_file_endereco=r"/home/fribeiro/bases/CNPJ/endereco.csv",
         
         # open_address.py
-        path_db_openaddress=r"/home/fribeiro/bases/CNPJ/openaddress.duckdb",
-        brasil=["ac", "al", "am", "ap", "ba", "ce", "df", "es", "go", "ma", "mg", "ms", "mt", "pa", 
-                "pb", "pe", "pi", "pr", "rj", "rn", "ro", "rr", "rs", "sc", "se", "sp", "to"],
+        path_db_openaddress=r"/home/fribeiro/bases/CNPJ/openaddresspe.duckdb",
+        
+        brasil=["ac", "al", "am", "ap", "ba", "ce", "df", "es", "go", "ma", "mg", "ms", "mt", 
+                "pa", "pb", "pe", "pi", "pr", "rj", "rn", "ro", "rr", "rs", "sc", "se", "sp", "to"],
+        
         campos_desnecessarios=["hash", "unit", "region", "id", "city", "district"],
+    
         arquivos=[
             "br/es/vitoria-addresses-city.geojson",
             "br/mg/belo_horizonte-addresses-city.geojson",
