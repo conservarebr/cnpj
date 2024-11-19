@@ -32,8 +32,8 @@ class Endereco:
                     e.cnae_secundaria,
                     CONCAT(e.tipo_logradouro, ' ', e.logradouro, ' ', e.numero, ' ',
                     e.bairro, ' ', e.municipio, ' ', e.uf) AS endereco_editado,
-                    e.cep
-                    REGEXP_REPLACE(e.cep, '(\\d{5})(\\d{3})', '\\1-\\2') AS cep_editado
+                    e.cep,
+                    CONCAT(SUBSTRING(e.cep FROM 1 FOR 5), '-', SUBSTRING(e.cep FROM 6 FOR 3)) AS cep_editado
                 FROM estabelecimentos AS e
                 LEFT JOIN municipios AS m
                     ON e.municipio = m.descricao;
@@ -67,3 +67,4 @@ class Endereco:
 if __name__ == '__main__':
     import asyncio
     asyncio.run(Endereco.processa_endereco())
+    
