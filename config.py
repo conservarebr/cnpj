@@ -18,15 +18,15 @@ async def load_settings() -> Settings:
 
         # nominatim.py
         path_file_endereco=r"/home/fribeiro/bases/CNPJ/endereco.csv",
+        cnaes_desejados=['4110700', '6435201', '6470101', '6470103', '6810201', 
+                        '6810202', '6810203', '6821801', '6821802', '6822600', '7490104'],
+        geocode_url="http://venus.iocasta.com.br:8080/search.php?q=",
         
         # open_address.py
-        path_db_openaddress=r"/home/fribeiro/bases/CNPJ/openaddresspe.duckdb",
-        
+        path_db_openaddress=r"/home/fribeiro/bases/CNPJ/openaddress.duckdb",
         brasil=["ac", "al", "am", "ap", "ba", "ce", "df", "es", "go", "ma", "mg", "ms", "mt", 
                 "pa", "pb", "pe", "pi", "pr", "rj", "rn", "ro", "rr", "rs", "sc", "se", "sp", "to"],
-        
         campos_desnecessarios=["hash", "unit", "region", "id", "city", "district"],
-    
         arquivos=[
             "br/es/vitoria-addresses-city.geojson",
             "br/mg/belo_horizonte-addresses-city.geojson",
