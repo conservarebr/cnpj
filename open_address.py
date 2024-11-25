@@ -38,7 +38,7 @@ class OpenAddress:
             
             for uf in brasil:
                 if uf == "to":
-                    uf = '"to"' 
+                    uf = "tocantis"
                     
                 try:
                     

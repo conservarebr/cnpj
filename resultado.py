@@ -21,15 +21,15 @@ class Resultado:
             conn.execute("""
                 CREATE TABLE IF NOT EXISTS nominatim (
                     cnpj_completo VARCHAR,
-                    cnae_primaria VARCHAR,
-                    cnae_secundaria VARCHAR,
                     endereco_editado VARCHAR,
                     cep VARCHAR,
-                    cep_editado VARCHAR
+                    cep_editado VARCHAR,
+                    resultado_geocodificacao_endereco_editado VARCHAR,
+                    resultado_geocodificacao_cep VARCHAR
                 );
             """)
 
-            nominatim_file_path = os.path.join(settings.path_file_cnpj, 'endereco.csv')
+            nominatim_file_path = os.path.join(settings.path_file_cnpj, 'nominatim.csv')
 
             conn.execute(f"""
             COPY nominatim FROM '{nominatim_file_path}'
@@ -41,23 +41,26 @@ class Resultado:
             union_queries = []
 
             for uf in estados:
-                estado = f'"{uf.lower()}"' if uf.lower() == "to" else uf.lower()
+                estado = f'"{uf.lower()}"' # if uf.lower() != "to" else '"to"' # Agora, todos os estados são tratados de forma uniforme
 
                 query = f"""
                 SELECT
                     e.cnpj_completo,
-                    e.cnae_primaria,
-                    e.cnae_secundaria,
                     e.endereco_editado,
                     e.cep_editado,
-                    {estado}.postcode
+                    e.resultado_geocodificacao_endereco_editado,
+                    e.resultado_geocodificacao_cep,
+                    uf.postcode,
+                    uf.geom
                 FROM
                     nominatim e
-                JOIN
+                LEFT JOIN
                     {estado} uf
-                    ON e.cep_editado = {estado}.postcode
+                    ON e.cep_editado = uf.postcode
                 WHERE
-                    e.endereco_editado LIKE '%{uf.upper()}'
+                    (e.resultado_geocodificacao_endereco_editado IS NULL OR e.resultado_geocodificacao_endereco_editado = '')
+                    AND
+                    (e.resultado_geocodificacao_cep IS NULL OR e.resultado_geocodificacao_cep = '')
                 """
                 union_queries.append(query)
 
@@ -80,3 +83,4 @@ class Resultado:
 if __name__ == '__main__':
     import asyncio
     asyncio.run(Resultado.processa_resultado())
+    
