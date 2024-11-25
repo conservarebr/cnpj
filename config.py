@@ -24,7 +24,8 @@ async def load_settings() -> Settings:
         
         # open_address.py
         path_db_openaddress=r"/home/fribeiro/bases/CNPJ/openaddress.duckdb",
-        brasil=["to"],
+        brasil=["ac", "al", "am", "ap", "ba", "ce", "df", "es", "go", "ma", "mg", "ms", "mt", 
+                "pa", "pb", "pe", "pi", "pr", "rj", "rn", "ro", "rr", "rs", "sc", "se", "sp"],
         campos_desnecessarios=["hash", "unit", "region", "id", "city", "district"],
         arquivos=[
             "br/es/vitoria-addresses-city.geojson",
@@ -41,8 +42,3 @@ async def load_settings() -> Settings:
             "br/rs/canoas-addresses-city.geojson"
         ]
     )
-    
-    
-    """        brasil=["ac", "al", "am", "ap", "ba", "ce", "df", "es", "go", "ma", "mg", "ms", "mt", 
-                "pa", "pb", "pe", "pi", "pr", "rj", "rn", "ro", "rr", "rs", "sc", "se", "sp", "to"],
-    """

@@ -5,7 +5,6 @@ from config import load_settings
 from logging_config import setup_logging
 
 setup_logging()
-
 class Resultado:
 
     async def processa_resultado():

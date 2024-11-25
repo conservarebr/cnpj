@@ -8,7 +8,6 @@ from logging_config import setup_logging
 setup_logging()
 
 conn = duckdb.connect(database='/home/fribeiro/bases/CNPJ/cnpj.duckdb')
-
 class Cnae:
 
     async def processa_cnae():
