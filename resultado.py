@@ -40,7 +40,7 @@ class Resultado:
             union_queries = []
 
             for uf in estados:
-                estado = f'"{uf.lower()}"' # if uf.lower() != "to" else '"to"' # Agora, todos os estados são tratados de forma uniforme
+                estado = f'"{uf.lower()}"'
 
                 query = f"""
                 SELECT
@@ -56,10 +56,6 @@ class Resultado:
                 LEFT JOIN
                     {estado} uf
                     ON e.cep_editado = uf.postcode
-                WHERE
-                    (e.resultado_geocodificacao_endereco_editado IS NULL OR e.resultado_geocodificacao_endereco_editado = '')
-                    AND
-                    (e.resultado_geocodificacao_cep IS NULL OR e.resultado_geocodificacao_cep = '')
                 """
                 union_queries.append(query)
 
@@ -82,4 +78,3 @@ class Resultado:
 if __name__ == '__main__':
     import asyncio
     asyncio.run(Resultado.processa_resultado())
-    
