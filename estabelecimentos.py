@@ -24,7 +24,7 @@ class Estabelecimentos:
                 CREATE TABLE estabelecimentos AS
                 SELECT DISTINCT
                     CONCAT(column00, column01, column02) AS cnpj_completo,
-                    column13 AS tipo_logradouro,
+                    column13 AS tipo_logradouro, 
                     column14 AS logradouro,
                     column15 AS numero,
                     column17 AS bairro,
