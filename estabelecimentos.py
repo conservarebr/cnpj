@@ -32,7 +32,7 @@ class Estabelecimentos:
                     column19 AS uf,
                     column20 AS municipio,
                     column11 AS cnae_primaria,
-                    TRIM(value.value) AS cnae_secundaria
+                    TRIM(value.value) AS cnae_secundaria 
                 FROM read_csv_auto(
                     [{estabelecimentos_files_str}],
                     sep = ';',
