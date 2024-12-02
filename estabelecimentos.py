@@ -44,7 +44,7 @@ class Estabelecimentos:
                 CROSS JOIN UNNEST(string_split(t.column12, ',')) AS value(value)
                 WHERE t.column05 = '02';
             """)
-
+        
         except Exception as e:
             logging.error(f"Ocorreu um erro: {e}")
         
