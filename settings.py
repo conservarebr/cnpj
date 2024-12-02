@@ -9,9 +9,9 @@ class Settings(BaseModel):
     s3_endpoint:str
     s3_region:str 
     s3_use_ssl:bool
-    s3_url_style:str
-    path_file_cnpj: str
-    path_file_endereco:str
+    s3_url_style:str 
+    path_file_cnpj: str 
+    path_file_endereco:str  
     cnaes_desejados:Optional[list[str]] = []
     geocode_url:str
     path_db_openaddress:str

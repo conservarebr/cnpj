@@ -24,9 +24,9 @@ class Resultado:
                     cep VARCHAR,
                     cep_editado VARCHAR,
                     resultado_geocodificacao_endereco_editado VARCHAR,
-                    resultado_geocodificacao_cep VARCHAR
+                    resultado_geocodificacao_cep VARCHAR  
                 );
-            """)
+            """) 
 
             nominatim_file_path = os.path.join(settings.path_file_cnpj, 'nominatim.csv')
 
