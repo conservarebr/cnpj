@@ -7,7 +7,7 @@ from logging_config import setup_logging
 
 setup_logging()
 
-conn = duckdb.connect(database='/home/fribeiro/bases/CNPJ/cnpj.duckdb')
+conn = duckdb.connect(database='/home/fribeiro/bases/CNPJ/cnpj.duckdb') 
 class Estabelecimentos:
     
     async def processa_estabelecimentos():
@@ -32,7 +32,7 @@ class Estabelecimentos:
                     column19 AS uf,
                     column20 AS municipio,
                     column11 AS cnae_primaria,
-                    TRIM(value.value) AS cnae_secundaria 
+                    TRIM(value.value) AS cnae_secundaria
                 FROM read_csv_auto(
                     [{estabelecimentos_files_str}],
                     sep = ';',
